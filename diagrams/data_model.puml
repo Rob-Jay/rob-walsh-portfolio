@@ -1,0 +1,39 @@
+@startuml
+skinparam style strictuml
+skinparam linetype ortho
+skinparam componentStyle uml2
+
+entity "UserProfile" {
+  * id : UUID
+  * name : String
+  * age : Int
+  * weight_kg : Float
+  * height_cm : Float
+  * experience : String
+  * goal : String
+}
+
+entity "WorkoutLog" {
+  * id : UUID
+  * user_id : UUID
+  * date : Date
+  * exercise : String
+  * sets : Int
+  * reps : Int
+  * weight : Float
+  * rpe : Float
+}
+
+entity "Mesocycle" {
+  * id : UUID
+  * user_id : UUID
+  * start_date : Date
+  * end_date : Date
+  * focus : String
+  * volume_targets : JSON
+  * actual_volume : JSON
+}
+
+UserProfile ||--o{ WorkoutLog : logs
+UserProfile ||--o{ Mesocycle : assigned
+@enduml

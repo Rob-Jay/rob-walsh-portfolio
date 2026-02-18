@@ -1,0 +1,19 @@
+@startuml
+skinparam style strictuml
+package "Backend API" {
+  [UserController]
+  [WorkoutController]
+  [PlanController]
+  [RAGService]
+  [PromptBuilder]
+  [VectorSearch]
+  [LLMClient]
+}
+
+UserController --> WorkoutController
+WorkoutController --> RAGService
+PlanController --> RAGService
+RAGService --> PromptBuilder
+PromptBuilder --> VectorSearch
+PromptBuilder --> LLMClient
+@enduml

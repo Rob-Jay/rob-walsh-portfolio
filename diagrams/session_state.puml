@@ -1,0 +1,9 @@
+@startuml
+skinparam style strictuml
+
+[*] --> Planned
+Planned --> InProgress : start workout
+InProgress --> Logged : all sets entered
+InProgress --> Missed : abandon session
+Missed --> Planned : reschedule
+@enduml

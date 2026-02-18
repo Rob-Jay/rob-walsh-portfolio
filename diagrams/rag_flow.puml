@@ -1,0 +1,20 @@
+@startuml
+skinparam style strictuml
+skinparam componentStyle rectangle
+
+actor User
+rectangle "User Input\n(Natural Language)" as Input
+rectangle "Prompt Builder" as Builder
+rectangle "Vector Store\n(FAISS/Qdrant)" as Vector
+rectangle "Relevant Docs\n(Training Science)" as Docs
+rectangle "LLM API\n(GPT-4/Mistral)" as LLM
+rectangle "Final Output\n(Training Plan, Feedback)" as Output
+
+User --> Input
+Input --> Builder : prepare structured prompt
+Builder --> Vector : semantic search
+Vector --> Docs : return top-k context chunks
+Builder --> LLM : context + prompt
+LLM --> Output
+Output --> User
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+skinparam style strictuml
+
+start
+
+:Launch App;
+:Create Profile;
+:Input Goals via Text/Voice;
+
+if (Existing Plan?) then (Yes)
+  :Continue current training;
+else (No)
+  :Trigger Plan Generator;
+  :Review 4-week block;
+endif
+
+:Log Workouts;
+:Track Volume/Recovery;
+:Get Weekly Feedback;
+
+stop
+@enduml

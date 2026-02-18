@@ -1,0 +1,7 @@
+﻿node_modules
+dist
+.DS_Store
+.vscode/
+.idea/
+rob-cv.txt
+rob-cv-extracted.txt

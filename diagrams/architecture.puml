@@ -1,0 +1,56 @@
+@startuml
+skinparam style strictuml
+skinparam componentStyle rectangle
+skinparam defaultTextAlignment center
+
+actor User
+
+package "Mobile App\n(React Native)" {
+  [User Interface]
+  [Speech-to-Text Processor]
+}
+
+package "Backend API\n(FastAPI)" {
+  [User Manager]
+  [Training Plan Engine]
+  [Workout Logger]
+  [RAG Coordinator]
+}
+
+package "RAG Engine" {
+  [Vector Store\n(FAISS/Qdrant)]
+  [LLM API\n(OpenAI or Local)]
+  [Prompt Builder]
+}
+
+database "Database\n(Supabase/Postgres)" {
+  [UserProfile Table]
+  [WorkoutLog Table]
+  [Mesocycle Table]
+}
+
+cloud "LLM API Provider" {
+  [GPT-4/Mistral]
+}
+
+User --> [User Interface] : enters goals, logs workouts
+[Speech-to-Text Processor] --> [User Interface]
+[User Interface] --> [User Manager] : user profile, logs
+[User Interface] --> [Training Plan Engine] : request new plan
+
+[Training Plan Engine] --> [RAG Coordinator] : needs context + generation
+[RAG Coordinator] --> [Prompt Builder]
+[Prompt Builder] --> [Vector Store] : semantic search
+[Vector Store] --> [Prompt Builder] : top-k docs
+
+[Prompt Builder] --> [LLM API] : context + prompt
+[LLM API] --> [RAG Coordinator] : response
+[LLM API] --> [GPT-4/Mistral]
+
+[RAG Coordinator] --> [Training Plan Engine] : final plan
+[Training Plan Engine] --> [User Interface] : display plan
+
+[Workout Logger] --> [Database]
+[User Manager] --> [Database]
+[Training Plan Engine] --> [Mesocycle Table]
+@enduml
