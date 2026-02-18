@@ -193,15 +193,7 @@ const timelineGraph = [
             : item.period === "May 2023"
               ? ["Joined Mastercard as SWE II", "Platform-heavy Java service delivery"]
               : ["Promoted to Senior in Feb 2026", "Architecture, mentoring, cross-team standards"]
-  })),
-  {
-    period: "Next",
-    title: "Want To See Your Company Next?",
-    detail: "Open to remote timezone-aligned roles.",
-    company: "next",
-    role: "Your Team?",
-    workedOn: ["Backend architecture", "Platform ownership", "Reliable delivery under pressure"]
-  }
+  }))
 ];
 
 const externalTracks = [
@@ -235,13 +227,13 @@ const reliabilitySnapshot = [
   }
 ];
 
-const recruiterSignals = [
+const profileSignals = [
   "Promoted to Senior: Feb 2026",
-  "Open to Remote Timezone-Aligned Roles",
+  "Production Backend Ownership",
   "Backend + Platform Ownership in Fintech"
 ];
 
-const recruiterValueTags = [
+const valueTags = [
   "Java + Spring Boot",
   "Event-Driven + Async Systems",
   "API Design + Platform Ownership",
@@ -447,10 +439,9 @@ function App() {
           <p className="intro">
             Backend-focused engineer with financial-services experience building secure APIs,
             async systems, and internal developer platforms, with hands-on frontend delivery when needed.
-            Open to remote timezone-aligned roles.
           </p>
           <div className="hero-signals">
-            {recruiterSignals.map((signal) => (
+            {profileSignals.map((signal) => (
               <span key={signal}>{signal}</span>
             ))}
           </div>
@@ -569,24 +560,6 @@ function App() {
                       <li key={line}>{line}</li>
                     ))}
                   </ul>
-                  {index === timelineGraph.length - 1 ? (
-                    <div className="hero-actions">
-                      <a className="button primary small" href="mailto:robertjaywalsh@gmail.com">
-                        Contact
-                      </a>
-                      <a className="button ghost" href="https://github.com/Rob-Jay" target="_blank" rel="noreferrer">
-                        GitHub
-                      </a>
-                      <a
-                        className="button ghost"
-                        href="https://www.linkedin.com/in/robert-walsh-937703218/"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        LinkedIn
-                      </a>
-                    </div>
-                  ) : null}
                 </div>
               </div>
             ))}
@@ -774,9 +747,9 @@ function App() {
         <section className="panel game-panel">
           <div className="section-heading">
             <h2>WIP</h2>
-            <p>High-value signals recruiters usually scan for first.</p>
+            <p>Current strengths and focus areas.</p>
             <div className="wip-value-tags">
-              {recruiterValueTags.map((tag) => (
+              {valueTags.map((tag) => (
                 <span key={tag}>{tag}</span>
               ))}
             </div>
@@ -788,7 +761,7 @@ function App() {
             <div className="mini-game chaos-zone">
               <div className="wip-stage">
                 <div className="wip-ribbon">UNDER CONSTRUCTION</div>
-                <div className="wip-progress">Production-Minded | Architecture-Led | Hiring Ready</div>
+                <div className="wip-progress">Production-Minded | Architecture-Led | Delivery Focused</div>
                 <div className="wip-blueprint">
                   <div className="wip-block large" />
                   <div className="wip-block mid" />
