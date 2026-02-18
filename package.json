@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://rob-jay.github.io/rob-walsh-homepage",
+  "homepage": "https://rob-jay.github.io/rob-walsh-portfolio",
   "scripts": {
     "dev": "vite",
     "build": "npm run render:diagrams && vite build",
