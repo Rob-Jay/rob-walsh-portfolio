@@ -84,7 +84,9 @@ export const caseStudies = [
     tradeoff:
       "Balanced throughput needs against stricter validation and auditability.",
     next:
-      "Add deeper load-test coverage and contract-test suites for partner integrations."
+      "Add deeper load-test coverage and contract-test suites for partner integrations.",
+    result:
+      "Patterns adopted as team reference; retry and idempotency design eliminated the primary class of duplicate-action incidents in downstream services."
   },
   {
     title: "Internal Chatbot + Knowledge Retrieval",
@@ -100,7 +102,9 @@ export const caseStudies = [
     tradeoff:
       "Optimized response quality while controlling latency and operational complexity.",
     next:
-      "Introduce retrieval quality scoring and stronger offline evaluation loops."
+      "Introduce retrieval quality scoring and stronger offline evaluation loops.",
+    result:
+      "Backend architecture baseline delivered and adopted by team; RAG retrieval flow significantly improved answer relevance and groundedness over baseline prompting."
   },
   {
     title: "Sport Training Data Engine",
@@ -116,7 +120,9 @@ export const caseStudies = [
     tradeoff:
       "Balanced flexibility of plan generation with predictable, easy-to-explain outputs.",
     next:
-      "Add richer personalization signals and performance analytics for plan quality."
+      "Add richer personalization signals and performance analytics for plan quality.",
+    result:
+      "Personal project — full architecture validated across mesocycle planning, session logging, and adaptive progression flows. Strongest evidence of end-to-end system thinking outside of professional work."
   }
 ];
 
@@ -140,6 +146,25 @@ export const toolkit = [
   "Testcontainers",
   "CI Quality Gates",
   "Observability (Metrics/Logs/Tracing)"
+];
+
+export const toolkitGroups = [
+  {
+    label: "Backend",
+    items: ["Java + Spring Boot", "Spring Security", "Microservice Architecture", "REST API Design", "Async Processing", "Kafka / Event-Driven Systems", "OAuth2 + JWT"]
+  },
+  {
+    label: "Frontend",
+    items: ["React + Vite", "JavaScript + TypeScript", "HTML + CSS", "Responsive UI Delivery", "Frontend State + Component Design"]
+  },
+  {
+    label: "Cloud & Infrastructure",
+    items: ["AWS + Azure", "Docker + Kubernetes", "PostgreSQL · MySQL · MongoDB · Oracle", "GitHub Actions + CI/CD", "Prometheus + Grafana", "Observability (Logs / Traces / Metrics)"]
+  },
+  {
+    label: "Testing & Quality",
+    items: ["Unit + Integration Testing", "Contract Testing", "E2E / API Testing", "Testcontainers", "Sonar + Black Duck", "CI Quality Gates"]
+  }
 ];
 
 export const architecturePrinciples = [
@@ -258,10 +283,10 @@ export const valueTags = [
 ];
 
 export const impactHighlights = [
-  "Led backend architecture for internal platform and profile/identity product initiatives",
-  "Built Java microservices for regulated fintech workflows with strong quality expectations",
-  "Owned chatbot foundation and retrieval-driven backend orchestration for internal assistant use cases",
-  "Can deliver frontend as well (React/JavaScript/TypeScript), with this portfolio as a live example"
+  "Led backend architecture for profile and identity platform serving multiple product teams at Mastercard",
+  "Built and owned Java microservices across 5 years in regulated fintech at J.P. Morgan and Mastercard",
+  "Architected retrieval-driven LLM backend for internal chatbot — from service structure to team onboarding standards",
+  "Delivers frontend when the project calls for it — React, TypeScript, this portfolio is a live example"
 ];
 
 const hiddenDiagramIds = new Set(["backend_components", "session_state", "user_flow"]);
@@ -323,6 +348,18 @@ export const architectureWorkItems = Object.entries(diagramSources)
   })
   .filter((item) => !hiddenDiagramIds.has(item.id))
   .sort((a, b) => a.title.localeCompare(b.title));
+
+export const aboutMe = {
+  blurb:
+    "Dublin-based engineer with 5 years in financial services at J.P. Morgan and Mastercard. I care about building backend systems that are reliable, observable in production, and not a nightmare to hand off. Recently promoted to Senior, I now lead architecture decisions and mentor engineers as well as shipping code. Outside of work I'm building a sport training data engine and exploring LLM/RAG systems — because the best way to understand a problem domain is to build something real in it.",
+  facts: [
+    { label: "Location", value: "Dublin, Ireland" },
+    { label: "Current Role", value: "Senior SE · Mastercard" },
+    { label: "Core Stack", value: "Java · Spring Boot · React" },
+    { label: "In the Lab", value: "LLM + RAG backend systems" },
+    { label: "Looking For", value: "Senior Backend · Platform Engineering" },
+  ],
+};
 
 export const experience = [
   {
