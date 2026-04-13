@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import AskRobWidget from "./components/AskRobWidget";
 import BullRunnerGame from "./components/BullRunnerGame";
 import DiagramCard from "./components/DiagramCard";
 import HeroActions from "./components/HeroActions";
@@ -6,7 +7,6 @@ import NavBar from "./components/NavBar";
 import SiteScaffold from "./components/SiteScaffold";
 import TerminalWidget from "./components/TerminalWidget";
 import TimelineMiniItem from "./components/TimelineMiniItem";
-import TrainingWidget from "./components/TrainingWidget";
 import TypingText from "./components/TypingText";
 import {
   COLLAPSE_RECOVERY_MS,
@@ -14,9 +14,6 @@ import {
   EXTERNAL_LINK_PROPS,
   GAME_UNLOCK_SCROLL_PERCENT,
   GITHUB_URL,
-
-
-
   GLITCH_BEEP_CONFIG
 } from "./constants/appConstants";
 import {
@@ -25,7 +22,6 @@ import {
   architectureWorkItems,
   caseStudies,
   experience,
-  externalTracks,
   impactHighlights,
   profileSignals,
   projectCards,
@@ -43,7 +39,6 @@ function App() {
   const [detonated, setDetonated] = useState(false);
   const [showFailure, setShowFailure] = useState(false);
   const collapseTimerRef = useRef(null);
-  const [revealedPets, setRevealedPets] = useState({ cat: false, dog: false });
 
   const activeScenario = useMemo(
     () => scenarios.find((scenario) => scenario.id === scenarioId) ?? scenarios[0],
@@ -138,16 +133,19 @@ function App() {
     }, COLLAPSE_RECOVERY_MS);
   };
 
-  const togglePetEgg = (pet) => {
-    setRevealedPets((prev) => ({ ...prev, [pet]: !prev[pet] }));
-  };
-
   return (
     <div className={`page-shell ${detonated ? "detonated" : ""} ${showFailure ? "show-failure" : ""}`}>
       <div className="grain" aria-hidden="true" />
+      <div className="bg-orbs" aria-hidden="true">
+        <div className="orb orb-a" />
+        <div className="orb orb-b" />
+        <div className="orb orb-c" />
+      </div>
+      <div className="bg-grid" aria-hidden="true" />
       <NavBar onTerminalOpen={() => setTerminalOpen(true)} />
       {terminalOpen && <TerminalWidget onClose={() => setTerminalOpen(false)} />}
       <main className="content">
+        {/* 1 — Hero */}
         <section className="hero" id="hero">
           <div className="status-badge">
             <span className="status-dot" aria-hidden="true" />
@@ -155,7 +153,7 @@ function App() {
           </div>
           <p className="eyebrow">Software Engineer | Backend + Platform</p>
           <h1>
-            Rob Walsh
+            <span className="hero-name">Rob Walsh</span>
             <TypingText text="Java microservices, platform ownership, production reliability." />
           </h1>
           <p className="intro">
@@ -175,6 +173,7 @@ function App() {
           <HeroActions />
         </section>
 
+        {/* 2 — About */}
         <section className="panel" id="about">
           <div className="section-heading">
             <h2>About Me</h2>
@@ -192,6 +191,46 @@ function App() {
           </div>
         </section>
 
+        {/* 3 — Career Timeline */}
+        <section className="panel timeline-panel" id="experience">
+          <div className="section-heading">
+            <h2>Career Timeline</h2>
+            <p>Hover each logo for role highlights.</p>
+          </div>
+          <div className="timeline-mini">
+            {timelineGraph.map((step, index) => (
+              <TimelineMiniItem
+                key={`${step.period}-${step.title}`}
+                step={step}
+                isLast={index === timelineGraph.length - 1}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* 4 — Experience Snapshot */}
+        <section className="panel">
+          <div className="section-heading">
+            <h2>Experience Snapshot</h2>
+          </div>
+          <div className="project-grid">
+            {experience.map((item) => (
+              <article className="project-card" key={`${item.company}-${item.period}`}>
+                <h3>
+                  {item.role} | {item.company}
+                </h3>
+                <p>{item.period}</p>
+                <ul>
+                  {item.bullets.map((bullet) => (
+                    <li key={bullet}>{bullet}</li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* 5 — Backend Scenario Switcher */}
         <section className="panel" id="playground">
           <div className="section-heading">
             <h2>Backend Scenario Switcher</h2>
@@ -209,7 +248,6 @@ function App() {
               </button>
             ))}
           </div>
-
           <article className="scenario-card">
             <h3>{activeScenario.title}</h3>
             <p className="stack">{activeScenario.stack}</p>
@@ -235,74 +273,7 @@ function App() {
           </article>
         </section>
 
-        <section className="panel">
-          <div className="section-heading">
-            <h2>System Reliability Snapshot</h2>
-            <p>How I keep backend systems stable, observable, and production-ready.</p>
-          </div>
-          <div className="reliability-grid">
-            {reliabilitySnapshot.map((item) => (
-              <article className="project-card" key={item.title}>
-                <h3>{item.title}</h3>
-                <p>{item.detail}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="panel timeline-panel" id="experience">
-          <div className="section-heading">
-            <h2>Career Timeline</h2>
-            <p>Hover each logo for role highlights.</p>
-          </div>
-          <div className="timeline-mini">
-            {timelineGraph.map((step, index) => (
-              <TimelineMiniItem
-                key={`${step.period}-${step.title}`}
-                step={step}
-                isLast={index === timelineGraph.length - 1}
-              />
-            ))}
-          </div>
-        </section>
-
-        <section className="panel">
-          <div className="section-heading">
-            <h2>Experience Snapshot</h2>
-          </div>
-          <div className="project-grid">
-            {experience.map((item) => (
-              <article className="project-card" key={`${item.company}-${item.period}`}>
-                <h3>
-                  {item.role} | {item.company}
-                </h3>
-                <p>{item.period}</p>
-                <ul>
-                  {item.bullets.map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="panel" id="projects">
-          <div className="section-heading">
-            <h2>Backend Project Highlights</h2>
-          </div>
-          <div className="project-grid">
-            {projectCards.map((project) => (
-              <article className="project-card" key={project.title}>
-                <h3>{project.title}</h3>
-                <p>{project.summary}</p>
-                <span>{project.tech}</span>
-                <strong>{project.impact}</strong>
-              </article>
-            ))}
-          </div>
-        </section>
-
+        {/* 6 — Case Studies */}
         <section className="panel" id="case-studies">
           <div className="section-heading">
             <h2>Case Studies</h2>
@@ -335,6 +306,40 @@ function App() {
           </div>
         </section>
 
+        {/* 7 — Backend Project Highlights */}
+        <section className="panel" id="projects">
+          <div className="section-heading">
+            <h2>Backend Project Highlights</h2>
+          </div>
+          <div className="project-grid">
+            {projectCards.map((project) => (
+              <article className="project-card" key={project.title}>
+                <h3>{project.title}</h3>
+                <p>{project.summary}</p>
+                <span>{project.tech}</span>
+                <strong>{project.impact}</strong>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* 8 — System Reliability Snapshot */}
+        <section className="panel">
+          <div className="section-heading">
+            <h2>System Reliability Snapshot</h2>
+            <p>How I keep backend systems stable, observable, and production-ready.</p>
+          </div>
+          <div className="reliability-grid">
+            {reliabilitySnapshot.map((item) => (
+              <article className="project-card" key={item.title}>
+                <h3>{item.title}</h3>
+                <p>{item.detail}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* 9 — Architecture Workbench */}
         <section className="panel" id="architecture">
           <div className="section-heading">
             <h2>Architecture Workbench</h2>
@@ -347,6 +352,7 @@ function App() {
           </div>
         </section>
 
+        {/* 10 — Architecture Playbook */}
         <section className="panel">
           <div className="section-heading">
             <h2>Architecture Playbook</h2>
@@ -359,74 +365,7 @@ function App() {
           </div>
         </section>
 
-        <section className="panel">
-          <div className="section-heading">
-            <h2>Personal Project Lab</h2>
-          </div>
-          <article className="scenario-card">
-            <h3>LLM + RAG Developer Tooling</h3>
-            <p className="stack">Status: In Progress | Repo link coming soon</p>
-            <ul>
-              <li>Focus: ingestion, retrieval strategies, and practical backend integration</li>
-              <li>Planned: architecture diagram, latency metrics, and lessons learned</li>
-              <li>Planned: GitHub + live demo links once polished</li>
-            </ul>
-          </article>
-        </section>
-
-        <section className="panel" id="training">
-          <div className="section-heading">
-            <h2>Training Log</h2>
-            <p>
-              Building toward my next race. The sport training engine I built tracks exactly this —
-              mesocycle planning, session logging, and adaptive progression.
-            </p>
-          </div>
-          <TrainingWidget />
-        </section>
-
-        <section className="panel" id="game">
-          <div className="section-heading">
-            <h2>Run With the Bulls</h2>
-            <p>A nod to Power Pamplona — dodge the bulls, survive as long as you can. W / S or ↑ ↓ to switch lanes.</p>
-          </div>
-          <BullRunnerGame />
-        </section>
-
-        <section className="panel">
-          <div className="section-heading">
-            <h2>Hackathons & Competitions Radar</h2>
-            <p>Tracks I am exploring for future submissions.</p>
-          </div>
-          <div className="project-grid events-grid">
-            {externalTracks.map((track) => (
-              <article className={`project-card event-card ${track.easterPet ? "has-pet-egg" : ""}`} key={track.name}>
-                <h3>{track.name}</h3>
-                <p>{track.note}</p>
-                {track.easterPet ? (
-                  <button
-                    type="button"
-                    className="pet-egg-trigger"
-                    onClick={() => togglePetEgg(track.easterPet)}
-                    aria-label={`Reveal ${track.easterPet} easter egg`}
-                    title="Easter egg"
-                  >
-                    {"\u{1F43E}"}
-                  </button>
-                ) : null}
-                {track.easterPet ? (
-                  <div className={`card-pet ${track.easterPet} ${revealedPets[track.easterPet] ? "open" : ""}`} aria-hidden="true">
-                    <span className="pet-spark">zZ</span>
-                  </div>
-                ) : null}
-                <a className="button ghost event-link" href={track.url} target="_blank" rel="noreferrer">
-                  View Events
-                </a>
-              </article>
-            ))}
-          </div>
-        </section>
-
+        {/* 11 — Core Toolkit */}
         <section className="panel" id="toolkit">
           <div className="section-heading">
             <h2>Core Toolkit</h2>
@@ -445,41 +384,83 @@ function App() {
           </div>
         </section>
 
+        {/* 13 — Dev Run */}
+        <section className="panel" id="game">
+          <div className="section-heading">
+            <h2>Dev Run</h2>
+            <p>Jump over bugs, server errors, and stack traces. Space / ↑ to jump — double jump available.</p>
+          </div>
+          <BullRunnerGame />
+        </section>
+
+        {/* 16 — System Status (the chaos closer) */}
         <section className="panel game-panel">
           <div className="section-heading">
-            <h2>Engineering Focus</h2>
-            <p>Current strengths and focus areas.</p>
-            <div className="wip-value-tags">
-              {valueTags.map((tag) => (
-                <span key={tag}>{tag}</span>
-              ))}
+            <h2>
+              System Status
+              <span className={`sys-overall-status ${detonated ? "incident" : "nominal"}`} aria-live="polite">
+                {detonated ? "⚠ INCIDENT ACTIVE" : "● All Systems Nominal"}
+              </span>
+            </h2>
+            <p>{detonated ? "P0 incident declared. On-call paged. All hands." : "Current engineering focus areas — live and stable. Please do not interfere."}</p>
+          </div>
+
+          {/* Service health rows */}
+          <div className="sys-health-grid">
+            {valueTags.map((tag) => (
+              <div key={tag} className={`sys-service ${detonated ? "down" : ""}`}>
+                <span className={`sys-dot ${detonated ? "red" : "green"}`} aria-hidden="true" />
+                {tag}
+              </div>
+            ))}
+          </div>
+
+          {/* Fake metrics bar */}
+          <div className={`sys-metrics ${detonated ? "critical" : ""}`}>
+            <div className="sys-metric">
+              <span>Uptime</span>
+              <strong>{detonated ? "0.00%" : "99.97%"}</strong>
+            </div>
+            <div className="sys-metric">
+              <span>Error Rate</span>
+              <strong>{detonated ? "100%" : "0.002%"}</strong>
+            </div>
+            <div className="sys-metric">
+              <span>Last Deploy</span>
+              <strong>{detonated ? "⚠ ROLLBACK" : "✓ stable"}</strong>
+            </div>
+            <div className="sys-metric">
+              <span>On-Call</span>
+              <strong>{detonated ? "PAGED 🚨" : "Rob (quiet)"}</strong>
             </div>
           </div>
 
+          {/* The button zone */}
           {!gameUnlocked ? (
-            <div className="locked-game">Keep scrolling. Reward unlocks at 80%.</div>
+            <div className="locked-game">System access requires 80% scroll clearance.</div>
           ) : (
-            <div className="mini-game chaos-zone">
-              <div className="wip-stage">
-                <div className="wip-ribbon">UNDER CONSTRUCTION</div>
-                <div className="wip-progress">Production-Minded | Architecture-Led | Delivery Focused</div>
-                <div className="wip-blueprint">
-                  <div className="wip-block large" />
-                  <div className="wip-block mid" />
-                  <div className="wip-block small" />
-                  <div className="wip-block row" />
+            <div className="chaos-zone">
+              {detonated && (
+                <div className="incident-banner" role="alert">
+                  ⚠ &nbsp;INCIDENT DECLARED — P0 · SEVERITY: CRITICAL · ALL HANDS
                 </div>
+              )}
+              {!detonated && (
                 <button
                   type="button"
-                  className="chaos-button launch-button"
+                  className="chaos-button deploy-button"
                   onClick={triggerCollapse}
-                  disabled={detonated}
                 >
-                  DO NOT PRESS
+                  ⚠ &nbsp;DO NOT PRESS — WORK IN PROGRESS
                 </button>
-                <SiteScaffold side="left" />
-                <SiteScaffold side="right" />
-              </div>
+              )}
+              {detonated && !showFailure && (
+                <div className="incident-resolved">
+                  ✓ &nbsp;MTTR: 4s · All services restored · Post-mortem scheduled
+                </div>
+              )}
+              <SiteScaffold side="left" />
+              <SiteScaffold side="right" />
             </div>
           )}
         </section>
@@ -508,6 +489,7 @@ function App() {
         </footer>
 
       </main>
+      <AskRobWidget />
     </div>
   );
 }
