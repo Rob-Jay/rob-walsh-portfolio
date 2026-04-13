@@ -47,24 +47,24 @@ export const scenarios = [
 
 export const projectCards = [
   {
-    title: "Mastercard: CFO Chatbot Foundation",
+    title: "Mastercard: Agentic Chatbot Platform",
     summary:
-      "First engineer and technical owner, defining service architecture, code structure, and onboarding standards.",
-    impact: "Established reusable team foundations",
-    tech: "Java, Spring Boot, Internal Platform APIs"
+      "First engineer on an internal LLM-powered chatbot — defined service architecture, retrieval orchestration, and team onboarding standards for an agentic backend.",
+    impact: "Architecture baseline adopted by the team",
+    tech: "Java, Spring Boot, LLM Integration, RAG Orchestration"
   },
   {
-    title: "Mastercard: Profile Management Platform",
+    title: "Mastercard: Identity Management Platform",
     summary:
-      "Owned end-to-end onboarding and profile-management architecture across validation, navigation, and service integration.",
-    impact: "Adopted patterns across multiple teams",
-    tech: "Microservices, API Gateway, Platform Tooling"
+      "Owned end-to-end identity and profile management architecture — validation flows, navigation logic, and API integrations used across multiple product teams.",
+    impact: "Patterns adopted across multiple teams",
+    tech: "Microservices, API Gateway, Spring Security, OAuth2"
   },
   {
-    title: "J.P. Morgan: Regulated API Services",
+    title: "J.P. Morgan: Investor Platform APIs",
     summary:
-      "Built secure Java microservices and REST APIs for financial data handling and frontend integration.",
-    impact: "Supported release quality and strict standards",
+      "Built secure Java microservices and REST APIs for investor-facing financial data services in a strictly regulated environment.",
+    impact: "Supported release quality and strict compliance standards",
     tech: "Java, REST, Async Patterns, TypeScript"
   }
 ];
@@ -104,7 +104,7 @@ export const caseStudies = [
     next:
       "Introduce retrieval quality scoring and stronger offline evaluation loops.",
     result:
-      "Backend architecture baseline delivered and adopted by team; RAG retrieval flow significantly improved answer relevance and groundedness over baseline prompting."
+      "Backend architecture baseline delivered and adopted by team; retrieval-augmented flow significantly improved answer relevance and groundedness over baseline prompting."
   },
   {
     title: "Sport Training Data Engine",
@@ -164,6 +164,10 @@ export const toolkitGroups = [
   {
     label: "Testing & Quality",
     items: ["Unit + Integration Testing", "Contract Testing", "E2E / API Testing", "Testcontainers", "Sonar + Black Duck", "CI Quality Gates"]
+  },
+  {
+    label: "AI & LLM",
+    items: ["AI System Design", "LLM Integration", "Prompt Engineering", "Vector Search & Embeddings", "Anthropic / OpenAI APIs", "Search & Retrieval Systems"]
   }
 ];
 
@@ -271,7 +275,8 @@ export const reliabilitySnapshot = [
 export const profileSignals = [
   "Promoted to Senior: Feb 2026",
   "Production Backend Ownership",
-  "Backend + Platform Ownership in Fintech"
+  "Backend + Platform Ownership in Fintech",
+  "Building AI-Powered Systems"
 ];
 
 export const valueTags = [
@@ -351,12 +356,13 @@ export const architectureWorkItems = Object.entries(diagramSources)
 
 export const aboutMe = {
   blurb:
-    "Dublin-based engineer with 5 years in financial services at J.P. Morgan and Mastercard. I care about building backend systems that are reliable, observable in production, and not a nightmare to hand off. Recently promoted to Senior, I now lead architecture decisions and mentor engineers as well as shipping code. Outside of work I'm building a sport training data engine and exploring LLM/RAG systems — because the best way to understand a problem domain is to build something real in it.",
+    "Dublin-based Senior Engineer with 5 years in regulated fintech at J.P. Morgan and Mastercard. I build backend systems that scale, stay observable in production, and don't become a liability at handoff. I lead architecture decisions, mentor engineers, and still ship code. Outside work I'm training for UTMB — using my own AI-powered system to build and adapt the plan.",
   facts: [
     { label: "Location", value: "Dublin, Ireland" },
     { label: "Current Role", value: "Senior SE · Mastercard" },
     { label: "Core Stack", value: "Java · Spring Boot · React" },
-    { label: "In the Lab", value: "LLM + RAG backend systems" },
+    { label: "In the Lab", value: "AI-powered backend systems" },
+    { label: "Outside Work", value: "UTMB training · Ultrarunning" },
     { label: "Looking For", value: "Senior Backend · Platform Engineering" },
   ],
 };
