@@ -6,8 +6,7 @@
   "homepage": "https://rob-jay.github.io/rob-walsh-portfolio",
   "scripts": {
     "dev": "vite",
-    "build": "npm run render:diagrams && vite build",
-    "render:diagrams": "node scripts/render-diagrams.mjs",
+    "build": "vite build",
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
