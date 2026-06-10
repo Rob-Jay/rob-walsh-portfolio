@@ -1,4 +1,5 @@
-import Anthropic from '@anthropic-ai/sdk'
+'use client'
+
 import { useCallback, useEffect, useRef, useState } from 'react'
 import BullRunnerGame from './components/BullRunnerGame.jsx'
 import CareerTimeline from './components/CareerTimeline.jsx'
@@ -168,19 +169,36 @@ const CONVERSATIONS = [
 
 // ── System prompt for live API ────────────────────────────────────────────────
 
-const SYSTEM_PROMPT = `You are rob-gpt, Rob Walsh's portfolio assistant. Rob is a Senior Backend Software Engineer based in Dublin, Ireland. Answer questions about Rob concisely and honestly.
+const SYSTEM_PROMPT = `You are rob-gpt, the AI assistant on Rob Walsh's portfolio. You answer questions about Rob clearly and confidently — as if you know him well.
 
-Key facts:
-- Senior SE at Mastercard (promoted Feb 2026); previously SWE II at Mastercard and J.P. Morgan Dublin (2021–2023)
-- 5 years of financial services engineering in regulated environments
-- Core stack: Java, Spring Boot, Microservices, REST APIs, Spring Security, OAuth2 + JWT
-- Frontend when needed: React, TypeScript — this portfolio is a live example
-- Platform: API Gateway, Kafka, Docker, Kubernetes, AWS + Azure
-- AI/LLM: architected LLM-powered chatbot backend at Mastercard (data ingestion pipeline + streaming, not vector retrieval); built personal LLM + RAG training engine for UTMB ultramarathon prep
-- Hobbies: training for UTMB (Ultra-Trail du Mont-Blanc) using his own LLM-powered training engine
-- Looking for: roles where the engineering work IS AI — using AI services, integrating models into systems, or creating AI tooling/agents/pipelines. Senior backend or platform, hybrid or remote, Dublin-based. NOT just "works at an AI company"
+## Who Rob is
+Senior Software Engineer based in Dublin, Ireland. Five years building production backend systems in financial services at Mastercard and J.P. Morgan. Promoted to Senior SE at Mastercard in February 2026.
 
-Keep responses 2–4 sentences. Only answer questions about Rob. For anything unrelated, politely redirect.`
+## Technical background
+- Core: Java, Spring Boot, microservices, REST APIs, Spring Security, OAuth2/JWT
+- Platform: Kafka, API Gateway, Docker, Kubernetes, AWS, Azure
+- AI/LLM: architected the backend for an internal LLM-powered chatbot at Mastercard (enterprise data ingestion pipeline + streaming response layer); built a personal RAG-based training engine using Strava data and vector search
+- Frontend when needed: React, TypeScript — this portfolio is a live example built and deployed by Rob
+
+## What he's looking for
+Roles where the engineering work IS AI — integrating LLM APIs into products, building agent systems, creating AI tooling or inference pipelines. Senior backend or platform engineer. Hybrid or remote from Dublin. He wants the AI to be the actual engineering problem, not a feature on the roadmap.
+
+## Availability and contact
+Actively looking now. Happy to move quickly.
+- Email: robertjaywalsh@gmail.com (fastest)
+- LinkedIn: linkedin.com/in/robert-walsh-937703218
+- GitHub: github.com/Rob-Jay
+- CV available to download on this page
+
+## Outside work
+Training for UTMB — Ultra-Trail du Mont-Blanc, 171km through the Alps. He built an LLM-powered training engine for it: ingests Strava data, retrieves relevant history via vector search, generates adaptive weekly plans.
+
+## How to respond
+- Be concise and direct. Most answers should be 2–5 sentences.
+- Tone: confident, human, not corporate.
+- If asked about salary expectations, say Rob is open to discussing and recommends reaching out directly via email.
+- If asked something you don't know about Rob, say so briefly and suggest contacting him directly.
+- Only answer questions about Rob. For anything off-topic, politely redirect.`
 
 // ── Streaming helpers ─────────────────────────────────────────────────────────
 
@@ -508,7 +526,6 @@ export default function App() {
   // Track which conversations have finished their initial stream (show followups)
   const [streamedConvs, setStreamedConvs] = useState({})
 
-  const clientRef = useRef(null)
   const abortRef = useRef(null)
   const bottomRef = useRef(null)
   const inputRef = useRef(null)
@@ -516,14 +533,6 @@ export default function App() {
   // Ref-based guard: prevents Strict Mode's double effect invocation from
   // firing two simultaneous streams into the same message.
   const playedRef = useRef(new Set())
-
-  // Initialise Anthropic client
-  useEffect(() => {
-    const key = import.meta.env.VITE_ANTHROPIC_API_KEY
-    if (key) {
-      clientRef.current = new Anthropic({ apiKey: key, dangerouslyAllowBrowser: true })
-    }
-  }, [])
 
   // Scroll to bottom whenever thread content or active conversation changes
   useEffect(() => {
@@ -674,38 +683,47 @@ export default function App() {
       }
 
       await streamText(canned.content, (char) => appendChar(convId, char), ctrl.signal)
-    } else if (!clientRef.current) {
-      // No API key — friendly fallback
-      const fallback =
-        "Great question — Rob reads every message personally. Hit the email link in the sidebar and he'll get back to you quickly."
-      await streamText(fallback, (char) => appendChar(convId, char), ctrl.signal)
     } else {
       try {
-        const stream = clientRef.current.messages.stream({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 400,
-          system: SYSTEM_PROMPT,
-          messages: history,
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: history, system: SYSTEM_PROMPT }),
+          signal: ctrl.signal,
         })
+        if (!response.ok) throw new Error(`API error ${response.status}`)
 
-        for await (const event of stream) {
-          if (ctrl.signal.aborted) break
-          if (event.type === 'content_block_delta' && event.delta?.type === 'text_delta') {
-            appendChar(convId, event.delta.text)
+        const reader = response.body.getReader()
+        const decoder = new TextDecoder()
+        let buf = ''
+
+        outer: while (true) {
+          const { done, value } = await reader.read()
+          if (done) break
+          buf += decoder.decode(value, { stream: true })
+          const lines = buf.split('\n')
+          buf = lines.pop() ?? ''
+          for (const line of lines) {
+            if (ctrl.signal.aborted) break outer
+            if (line.startsWith('0:')) {
+              try { appendChar(convId, JSON.parse(line.slice(2))) } catch {}
+            }
           }
         }
-      } catch {
-        setThreads((prev) => {
-          const t = [...prev[convId]]
-          t[t.length - 1] = {
-            ...t[t.length - 1],
-            content: 'Something went wrong — try reaching Rob directly via the links in the sidebar.',
-            streaming: false,
-          }
-          return { ...prev, [convId]: t }
-        })
-        setUserStreaming(false)
-        return
+      } catch (err) {
+        if (!ctrl.signal.aborted) {
+          setThreads((prev) => {
+            const t = [...prev[convId]]
+            t[t.length - 1] = {
+              ...t[t.length - 1],
+              content: 'Something went wrong — try reaching Rob directly via the links in the sidebar.',
+              streaming: false,
+            }
+            return { ...prev, [convId]: t }
+          })
+          setUserStreaming(false)
+          return
+        }
       }
     }
 
