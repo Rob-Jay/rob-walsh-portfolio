@@ -12,7 +12,10 @@
       "Bash(git push *)",
       "Bash(npm install *)",
       "Bash(git commit *)",
-      "Bash(npm --version)"
+      "Bash(npm --version)",
+      "Bash(git checkout *)",
+      "Bash(git merge *)",
+      "Bash(git stash *)"
     ]
   }
 }
