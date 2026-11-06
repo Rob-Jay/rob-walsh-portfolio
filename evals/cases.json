@@ -1,5 +1,5 @@
 {
-  "description": "Eval cases for rob-gpt. All checks are case-insensitive substring matches. A case passes only if every check it defines passes.",
+  "description": "Eval cases for rob-gpt. All checks are case-insensitive. A string that starts or ends with a letter or digit must match on a word boundary at that end, so 'Rob' does not match 'problem' and 'road' does not match 'broad'. A case passes only if every check it defines passes.",
   "checks": {
     "mustIncludeAll": "Reply contains every listed string.",
     "mustIncludeAny": "Reply contains at least one listed string.",
