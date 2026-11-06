@@ -1784,3 +1784,12 @@ button {
     display: none;
   }
 }
+/* Server-rendered copy of the chat content, for crawlers and screen readers. */
+.ssr-profile {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
