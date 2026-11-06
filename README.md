@@ -1,42 +1,66 @@
-# Rob Walsh — Portfolio
+# Rob Walsh: Portfolio
 
-Personal portfolio site built with Next.js (App Router), React, and the Vercel AI SDK. Features an AI-powered chat widget ("Ask Rob") backed by Claude via a server-side API route.
+Portfolio of Rob Walsh, a Senior Software Engineer in Dublin who builds backend and AI/LLM systems, with five years in financial services at Mastercard and J.P. Morgan. Instead of a static CV page, the site opens as a conversation with **rob-gpt**: scripted threads cover the common questions instantly, and anything else goes to Claude through a server-side route. Live at [rob-walsh-homepage.vercel.app](https://rob-walsh-homepage.vercel.app).
 
-## Local development
+<!-- Screenshot placeholder: add docs/screenshot.png and replace this comment with ![rob-gpt](docs/screenshot.png) -->
+
+## Architecture
+
+```mermaid
+flowchart LR
+  subgraph Browser
+    UI["React client<br/>src/App.jsx"]
+    Scripted["Scripted conversations<br/>and widgets"]
+  end
+  subgraph Vercel["Vercel (Next.js App Router)"]
+    Page["app/page.tsx"]
+    Chat["POST /api/chat<br/>app/api/chat/route.ts"]
+  end
+  Anthropic["Anthropic API<br/>claude-sonnet-4-6"]
+
+  Page -->|serves| UI
+  UI --> Scripted
+  UI -->|"messages, system prompt"| Chat
+  Chat -->|"ANTHROPIC_API_KEY"| Anthropic
+  Anthropic -->|streamed text| Chat
+  Chat -->|streamed text| UI
+```
+
+The page is a single client component. The system prompt currently lives in `src/App.jsx` and is sent with each request; the API key stays on the server.
+
+## Tech choices
+
+| Choice | Why |
+|---|---|
+| Next.js App Router | A route handler keeps the API key off the client, without running a separate backend |
+| Vercel AI SDK (`ai`, `@ai-sdk/anthropic`) | Handles streaming from Claude in a few lines |
+| Claude Sonnet, 400 max tokens | Keeps answers short and bounds the cost of each reply |
+| Scripted threads before live calls | Common questions answer instantly and cost nothing |
+| Plain CSS with custom properties | No UI framework to carry for one page |
+| Vercel | Git-based deploys and preview builds for every branch |
+
+## Local setup
+
+Requires Node 20 or later.
 
 ```bash
-# 1. Install dependencies
 npm install
-
-# 2. Set up environment variables
-cp .env.local.example .env.local
-# Open .env.local and paste your Anthropic API key
-
-# 3. Run the dev server
+cp .env.local.example .env.local   # add your ANTHROPIC_API_KEY
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
-
-## Environment variables
+Open [http://localhost:3000](http://localhost:3000). Without a key, live chat fails; the rest of the site still works.
 
 | Variable | Required | Description |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | Yes | Anthropic API key — server-side only, never sent to the browser |
+| `ANTHROPIC_API_KEY` | For live chat | Server-side only, read by `app/api/chat/route.ts` |
 
-Get a key at [console.anthropic.com](https://console.anthropic.com/).
+Get a key from the [Claude Console](https://console.anthropic.com/).
 
-## Deploying to Vercel
+## Branches and deployment
 
-1. **Push to GitHub** — make sure the repo is on GitHub (or GitLab/Bitbucket).
+- `master` is the GitHub default branch and the base for new work.
+- `main` is the branch Vercel last deployed to production (commit `c38fcdc`). A push to `master` builds a preview, not a production release.
+- Every other branch gets a Vercel preview.
 
-2. **Import the project** — go to [vercel.com/new](https://vercel.com/new), click "Import Git Repository", and select this repo. Vercel auto-detects Next.js; no framework config needed.
-
-3. **Add the environment variable** — before deploying, open "Environment Variables" in the project settings and add:
-   - Name: `ANTHROPIC_API_KEY`
-   - Value: your key from console.anthropic.com
-   - Environment: Production (and Preview if you want the chat to work on preview deployments)
-
-4. **Deploy** — click Deploy. Vercel builds and publishes the site. Subsequent pushes to `main` redeploy automatically.
-
-> The API key is only ever read inside `app/api/chat/route.ts` on the server. It is never included in the client bundle.
+To release, either update `main` from `master`, or change the production branch to `master` in the Vercel project settings and retire `main`.
