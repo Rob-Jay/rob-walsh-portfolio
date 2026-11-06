@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "evals": "node scripts/run-evals.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.0.0",
