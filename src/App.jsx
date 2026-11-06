@@ -69,7 +69,7 @@ const CANNED_ANSWERS = {
       input: { section: 'technical_skills', format: 'grouped' },
       result: 'Returned 4 skill groups · 18 technologies',
     },
-    content: "Backend core: Java, Spring Boot, microservices, REST APIs, Spring Security, OAuth2/JWT — that's where most of my professional experience lives.\n\nPlatform layer: Kafka for event-driven systems, API Gateway, Docker, Kubernetes, AWS and Azure. Full observability stack in production — metrics, tracing, alerting.\n\nAI/LLM: Claude API with streaming and tool use, RAG retrieval flows, embeddings, vector search. This portfolio uses Claude Haiku — source on GitHub.\n\nFrontend when the project needs it: React, TypeScript. You're looking at a live example right now.",
+    content: "Backend core: Java, Spring Boot, microservices, REST APIs, Spring Security, OAuth2/JWT — that's where most of my professional experience lives.\n\nPlatform layer: Kafka for event-driven systems, API Gateway, Docker, Kubernetes, AWS and Azure. Full observability stack in production — metrics, tracing, alerting.\n\nAI/LLM: Claude API with streaming and tool use, RAG retrieval flows, embeddings, vector search. This portfolio uses Claude Sonnet — source on GitHub.\n\nFrontend when the project needs it: React, TypeScript. You're looking at a live example right now.",
   },
 
   "Tell me about your AI work": {

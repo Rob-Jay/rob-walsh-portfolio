@@ -17,7 +17,7 @@ const GROUPS = [
   {
     name: 'Frontend',
     color: '#f472b6',
-    skills: ['React', 'TypeScript', 'Vite'],
+    skills: ['React', 'TypeScript', 'Next.js'],
   },
 ]
 

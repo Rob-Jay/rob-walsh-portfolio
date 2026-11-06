@@ -10,7 +10,7 @@ export const CONVERSATIONS = [
       {
         role: 'assistant',
         content:
-          "I'm Rob Walsh, a Senior Software Engineer based in Dublin. Five years building production backend systems in financial services — Java, Spring Boot, microservices at scale at Mastercard and J.P. Morgan.\n\nThe direction I'm moving: I want to work on AI itself. Integrating AI services into products, engineering the systems that connect models to the real world, and building the tooling around them. I led the LLM chatbot backend at Mastercard, built a personal AI training engine for my ultramarathon prep, and this portfolio is a live Claude integration I built end-to-end.\n\nI want the engineering work to be the AI — not a feature on the roadmap.",
+          "I'm Rob Walsh, a Senior Software Engineer based in Dublin. Five years building production backend systems in financial services — Java, Spring Boot, microservices at scale at Mastercard and J.P. Morgan.\n\nThe direction I'm moving: I want to work on AI itself. Integrating AI services into products, engineering the systems that connect models to the real world, and building the tooling around them.\n\nI want the engineering work to be the AI — not a feature on the roadmap.",
       },
     ],
     followups: ["What's your tech stack?", 'Tell me about your AI work', 'Are you open to work?'],
@@ -45,7 +45,7 @@ export const CONVERSATIONS = [
       {
         role: 'assistant',
         content:
-          'Backend core: Java, Spring Boot, microservices, REST APIs, Spring Security, OAuth2/JWT — that\'s where most of my professional experience lives.\n\nPlatform layer: Kafka for event-driven systems, API Gateway, Docker, Kubernetes, AWS and Azure. Full observability stack in production — metrics, tracing, alerting.\n\nAI/LLM: Claude API with streaming and tool use, RAG retrieval flows, embeddings, vector search. This portfolio uses Claude Haiku — source on GitHub.\n\nFrontend when the project needs it: React, TypeScript. You\'re looking at a live example right now.',
+          'Backend core: Java, Spring Boot, microservices, REST APIs, Spring Security, OAuth2/JWT — that\'s where most of my professional experience lives.\n\nPlatform layer: Kafka for event-driven systems, API Gateway, Docker, Kubernetes, AWS and Azure. Full observability stack in production — metrics, tracing, alerting.\n\nAI/LLM: Claude API with streaming and tool use, RAG retrieval flows, embeddings, vector search. This portfolio uses Claude Sonnet — source on GitHub.\n\nFrontend when the project needs it: React, TypeScript. You\'re looking at a live example right now.',
       },
     ],
     followups: ['Tell me about the LLM work', 'How do you approach system design?', 'Tell me about the UTMB training engine'],
@@ -134,7 +134,7 @@ export const CONVERSATIONS = [
       {
         role: 'assistant',
         content:
-          "React 18 and Vite, deployed to GitHub Pages. Intentionally a single component — no router, no state management library — because the problem doesn't need more complexity than that.\n\nThe AI layer: Claude Haiku via the Anthropic SDK running directly in the browser. Each conversation pre-loads with character-by-character streaming so there's always something moving on arrival. User messages hit the live API with full conversation history as context.\n\nThe interesting engineering problem: React 18 Strict Mode double-invokes effects in development, which caused two simultaneous streams writing into the same message bubble. Fixed with a ref-based guard that updates synchronously — unlike state, the second invocation sees it immediately and exits.\n\nTool call bubbles, per-conversation state, abort controllers for stream cancellation, an embedded game, a live training widget — all in one file. Source is on GitHub.",
+          "Next.js and React, deployed on Vercel. The chat is intentionally one main component — no router, no state management library — because the problem doesn't need more complexity than that.\n\nThe AI layer: a server route calls Claude Sonnet through the Vercel AI SDK, so the API key never reaches the browser. It applies per-IP limits, finds matching notes in markdown files, and refuses anything they don't cover. Scripted conversations stream word by word so there's always something moving on arrival.\n\nThe interesting engineering problem: React 18 Strict Mode double-invokes effects in development, which caused two simultaneous streams writing into the same message bubble. Fixed with a ref-based guard that updates synchronously — unlike state, the second invocation sees it immediately and exits.\n\nTool call bubbles, per-conversation state, abort controllers for stream cancellation, an embedded game, a training widget. Source is on GitHub.",
       },
     ],
     followups: ["What's your tech stack?", 'Tell me about your AI work', 'Are you open to work?'],

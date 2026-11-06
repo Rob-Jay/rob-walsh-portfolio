@@ -1,5 +1,5 @@
 // Knowledge files behind each scripted answer, shown as source chips.
-// Conversations left out here (how-built, game) are not backed by content/knowledge.
+// Play a Game has no chip: it is not backed by content/knowledge.
 export const CONVERSATION_SOURCES = {
   intro: ['about.md'],
   contact: ['contact.md'],
@@ -8,6 +8,7 @@ export const CONVERSATION_SOURCES = {
   work: ['looking-for.md'],
   career: ['experience.md'],
   outside: ['training.md'],
+  'how-built': ['portfolio.md'],
 }
 
 export const CANNED_SOURCES = {
