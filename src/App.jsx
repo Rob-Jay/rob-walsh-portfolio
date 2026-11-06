@@ -438,6 +438,7 @@ function ContactForm() {
     <div className="contact-form">
       <textarea
         className="contact-textarea"
+        aria-label="Your message to Rob"
         placeholder="Write your message to Rob…"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
@@ -533,6 +534,14 @@ export default function App() {
   // Ref-based guard: prevents Strict Mode's double effect invocation from
   // firing two simultaneous streams into the same message.
   const playedRef = useRef(new Set())
+
+  // Escape closes the mobile drawer
+  useEffect(() => {
+    if (!sidebarOpen) return
+    const onKeyDown = (e) => { if (e.key === 'Escape') setSidebarOpen(false) }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [sidebarOpen])
 
   // Scroll to bottom whenever thread content or active conversation changes
   useEffect(() => {
@@ -748,6 +757,7 @@ export default function App() {
 
   return (
     <div className="chat-app">
+      <a className="skip-link" href="#chat-input">Skip to chat</a>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} aria-hidden="true" />
@@ -835,14 +845,14 @@ export default function App() {
             <span className="header-location">Dublin, IE</span>
           </div>
 
-          <div className="open-badge" aria-label="Open to work">
+          <div className="open-badge" role="img" aria-label="Open to work">
             <span className="open-dot" aria-hidden="true" />
             <span>Open to work</span>
           </div>
         </header>
 
         {/* Thread */}
-        <div className="chat-thread" ref={threadRef} role="log" aria-live="polite" aria-label="Conversation">
+        <div className="chat-thread" ref={threadRef} tabIndex={0} role="log" aria-live="polite" aria-label="Conversation">
           {currentThread.length === 0 && (
             <div className="chat-loading" aria-hidden="true">
               <div className="loading-dots">
@@ -922,6 +932,7 @@ export default function App() {
           <div className="chat-input-row">
             <textarea
               ref={inputRef}
+              id="chat-input"
               className="chat-input"
               placeholder="Ask anything about Rob…"
               value={input}

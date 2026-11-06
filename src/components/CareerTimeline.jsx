@@ -4,6 +4,7 @@ const ROLES = [
     role: 'Software Engineer',
     period: '2021 – 2023',
     color: '#4a6fa5',
+    textColor: '#8aa8dc',
     initials: 'JPM',
     highlights: [
       'Backend services for internal financial systems',
@@ -15,7 +16,8 @@ const ROLES = [
     company: 'Mastercard',
     role: 'Software Engineer II',
     period: '2023 – Feb 2026',
-    color: '#eb001b',
+    color: '#d6001a',
+    textColor: '#ff6b73',
     initials: 'MC',
     highlights: [
       'Microservices, Kafka pipelines, API Gateway',
@@ -28,6 +30,7 @@ const ROLES = [
     role: 'Senior Software Engineer',
     period: 'Feb 2026 – Present',
     color: '#f59e0b',
+    badgeText: '#0a0500',
     initials: 'MC',
     current: true,
     highlights: [
@@ -46,7 +49,7 @@ export default function CareerTimeline() {
           <div className="tl-left">
             <div
               className="tl-badge"
-              style={{ background: role.color, boxShadow: `0 0 0 3px ${role.color}28` }}
+              style={{ background: role.color, color: role.badgeText, boxShadow: `0 0 0 3px ${role.color}28` }}
             >
               {role.initials}
             </div>
@@ -54,7 +57,7 @@ export default function CareerTimeline() {
           </div>
           <div className="tl-body">
             <div className="tl-period">{role.period}</div>
-            <div className="tl-company" style={{ color: role.color }}>{role.company}</div>
+            <div className="tl-company" style={{ color: role.textColor ?? role.color }}>{role.company}</div>
             <div className="tl-role">
               {role.role}
               {role.current && <span className="tl-now-badge">now</span>}
