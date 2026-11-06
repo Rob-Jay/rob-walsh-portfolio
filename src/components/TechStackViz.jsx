@@ -38,7 +38,7 @@ export default function TechStackViz() {
                 style={{
                   borderColor: `${group.color}2e`,
                   background: `${group.color}0d`,
-                  color: `${group.color}cc`,
+                  color: group.color,
                 }}
               >
                 {skill}

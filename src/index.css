@@ -66,7 +66,7 @@
   --on-accent:    #0a0500;
   --text:         #e8e3f5;
   --text-dim:     #9090b8;
-  --text-dimmer:  #50507a;
+  --text-dimmer:  #8282a8;
   --green:        #10b981;
   --green-text:   #6ee7b7;
 }
@@ -868,11 +868,15 @@ button {
     inset: 0 auto 0 0;
     z-index: 60;
     transform: translateX(-100%);
+    /* Keeps the closed drawer's links out of the tab order */
+    visibility: hidden;
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.22s;
     width: 280px;
     box-shadow: none;
   }
 
   .sidebar.open {
+    visibility: visible;
     transform: translateX(0);
     box-shadow: 6px 0 40px rgba(0,0,0,.6);
   }
@@ -2092,4 +2096,32 @@ button {
     animation: none !important;
     transform: translateX(-50%);
   }
+}
+
+/* Keyboard focus */
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.chat-input:focus-visible {
+  outline: none; /* the input row shows focus through :focus-within */
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--amber);
+  color: #0a0500;
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
 }

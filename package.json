@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "evals": "node scripts/run-evals.mjs"
+    "evals": "node scripts/run-evals.mjs",
+    "lighthouse": "lhci autorun"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.0.0",
@@ -24,6 +25,7 @@
     "node": ">=20.0.0"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.16.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
