@@ -8,6 +8,7 @@ import DublinSkyline from './components/DublinSkyline.jsx'
 import TerminalStream from './components/TerminalStream.jsx'
 import TechStackViz from './components/TechStackViz.jsx'
 import TrainingWidget from './components/TrainingWidget.jsx'
+import { CANNED_SOURCES, CONVERSATION_SOURCES } from './data/answerSources.js'
 
 // ── Conversation definitions ──────────────────────────────────────────────────
 
@@ -518,6 +519,15 @@ export default function App() {
   }, [])
 
   // Mark the last message in a conversation as done streaming
+  const setLastSources = useCallback((convId, sources) => {
+    if (!sources?.length) return
+    setThreads((prev) => {
+      const t = [...prev[convId]]
+      t[t.length - 1] = { ...t[t.length - 1], sources }
+      return { ...prev, [convId]: t }
+    })
+  }, [])
+
   const finishStream = useCallback((convId) => {
     setThreads((prev) => {
       const t = [...prev[convId]]
@@ -567,6 +577,7 @@ export default function App() {
 
     if (!ctrl.signal.aborted) {
       finishStream(convId)
+      setLastSources(convId, CONVERSATION_SOURCES[convId])
       const artifactRole = conv.gameArtifact ? 'game'
         : conv.trainingArtifact ? 'training'
         : conv.contactArtifact ? 'contact'
@@ -584,7 +595,7 @@ export default function App() {
       }
       setStreamedConvs((prev) => ({ ...prev, [convId]: true }))
     }
-  }, [appendChar, finishStream])
+  }, [appendChar, finishStream, setLastSources])
 
   // Trigger playback when active conversation changes
   useEffect(() => {
@@ -631,6 +642,8 @@ export default function App() {
     const ctrl = new AbortController()
     abortRef.current = ctrl
 
+    let sources = CANNED_SOURCES[text]
+
     if (CANNED_ANSWERS[text]) {
       const canned = CANNED_ANSWERS[text]
 
@@ -660,10 +673,16 @@ export default function App() {
           signal: ctrl.signal,
         })
         if (!response.ok) throw Object.assign(new Error(`API error ${response.status}`), { status: response.status })
+        try {
+          sources = JSON.parse(response.headers.get('X-Rob-Sources') ?? '[]')
+        } catch {
+          sources = []
+        }
 
         const reader = response.body.getReader()
         const decoder = new TextDecoder()
         let buf = ''
+        let gotText = false
 
         outer: while (true) {
           const { done, value } = await reader.read()
@@ -674,10 +693,12 @@ export default function App() {
           for (const line of lines) {
             if (ctrl.signal.aborted) break outer
             if (line.startsWith('0:')) {
-              try { appendChar(convId, JSON.parse(line.slice(2))) } catch {}
+              try { appendChar(convId, JSON.parse(line.slice(2))); gotText = true } catch {}
             }
           }
         }
+        // The model call failed mid-stream: the response was 200 but carried no text.
+        if (!gotText && !ctrl.signal.aborted) throw new Error('Empty response')
       } catch (err) {
         if (!ctrl.signal.aborted) {
           setThreads((prev) => {
@@ -697,7 +718,10 @@ export default function App() {
       }
     }
 
-    if (!ctrl.signal.aborted) finishStream(convId)
+    if (!ctrl.signal.aborted) {
+      finishStream(convId)
+      setLastSources(convId, sources)
+    }
     setUserStreaming(false)
   }
 
@@ -857,7 +881,7 @@ export default function App() {
                 <div className="msg-bubble">
                   {msg.streaming && !msg.content
                     ? <div className="thinking-dots" aria-label="Thinking"><span /><span /><span /></div>
-                    : <><MsgContent content={msg.content} />{msg.streaming && <span className="stream-cursor" aria-hidden="true" />}</>
+                    : <><MsgContent content={msg.content} />{msg.streaming && <span className="stream-cursor" aria-hidden="true" />}{!msg.streaming && msg.sources?.length > 0 && <SourceChips sources={msg.sources} />}</>
                   }
                 </div>
                 {msg.role === 'user' && (
@@ -928,6 +952,16 @@ export default function App() {
 
 // ── Message content renderer ──────────────────────────────────────────────────
 // Handles: \n\n paragraph breaks, \n line breaks, and • / - bullet lists.
+
+function SourceChips({ sources }) {
+  return (
+    <ul className="source-chips" aria-label="Sources">
+      {sources.map((source) => (
+        <li key={source} className="source-chip">{source}</li>
+      ))}
+    </ul>
+  )
+}
 
 function MsgContent({ content }) {
   if (!content) return null
