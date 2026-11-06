@@ -1,6 +1,5 @@
 node_modules/
 dist/
-.vite/
 .idea/
 .next/
 next-env.d.ts
