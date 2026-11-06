@@ -204,7 +204,16 @@ Training for UTMB — Ultra-Trail du Mont-Blanc, 171km through the Alps. He buil
 
 // Stream word-by-word so complete words appear at once (no mid-word splits).
 // 22ms per word ≈ fast reading pace; punctuation pauses add natural rhythm.
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
 async function streamText(text, onChunk, signal) {
+  // Word-by-word typing is motion too: show the whole answer at once.
+  if (prefersReducedMotion()) {
+    if (!signal?.aborted) onChunk(text)
+    return
+  }
+
   const WORD_MS = 22
   // Split into alternating word/whitespace tokens preserving all spacing
   const tokens = text.match(/[^\s]+|\s+/g) ?? []
@@ -536,7 +545,7 @@ export default function App() {
 
   // Scroll to bottom whenever thread content or active conversation changes
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    bottomRef.current?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
   }, [threads, activeId])
 
   // Append one character to the last message in a given conversation
