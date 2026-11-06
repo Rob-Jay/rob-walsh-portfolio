@@ -8,6 +8,7 @@ import DublinSkyline from './components/DublinSkyline.jsx'
 import TerminalStream from './components/TerminalStream.jsx'
 import TechStackViz from './components/TechStackViz.jsx'
 import TrainingWidget from './components/TrainingWidget.jsx'
+import ThemeToggle from './components/ThemeToggle.jsx'
 
 // ── Conversation definitions ──────────────────────────────────────────────────
 
@@ -834,6 +835,8 @@ export default function App() {
             <span className="header-sep header-sep--hide" aria-hidden="true">·</span>
             <span className="header-location">Dublin, IE</span>
           </div>
+
+          <ThemeToggle />
 
           <div className="open-badge" aria-label="Open to work">
             <span className="open-dot" aria-hidden="true" />

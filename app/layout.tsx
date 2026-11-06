@@ -19,9 +19,19 @@ export const metadata: Metadata = {
   },
 }
 
+// Runs before first paint so the page never flashes the wrong theme.
+const THEME_SCRIPT = `try {
+  var saved = localStorage.getItem('theme');
+  var system = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  document.documentElement.dataset.theme = saved === 'light' || saved === 'dark' ? saved : system;
+} catch (e) {}`
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
       <body>{children}</body>
     </html>
   )
