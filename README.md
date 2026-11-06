@@ -14,19 +14,23 @@ flowchart LR
   end
   subgraph Vercel["Vercel (Next.js App Router)"]
     Page["app/page.tsx"]
-    Chat["POST /api/chat<br/>app/api/chat/route.ts"]
+    Chat["POST /api/chat<br/>limits and retrieval"]
+    Notes["content/knowledge/*.md"]
   end
   Anthropic["Anthropic API<br/>claude-sonnet-4-6"]
 
   Page -->|serves| UI
   UI --> Scripted
-  UI -->|"messages, system prompt"| Chat
+  UI -->|messages| Chat
+  Notes -->|matching notes| Chat
   Chat -->|"ANTHROPIC_API_KEY"| Anthropic
   Anthropic -->|streamed text| Chat
   Chat -->|streamed text| UI
 ```
 
-The page is a single client component. The system prompt currently lives in `src/App.jsx` and is sent with each request; the API key stays on the server.
+The chat is a client component. `/api/chat` applies per-IP limits, finds matching notes in `content/knowledge` with keyword search, and refuses questions the notes don't cover without calling the model. Answers show which notes they came from. The system prompt and API key stay on the server.
+
+`npm run evals` scores rob-gpt against `evals/cases.json`, and `/evals` shows the results. Case studies are markdown files in `content/case-studies`.
 
 ## Tech choices
 

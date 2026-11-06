@@ -1870,7 +1870,7 @@ button {
   padding: 2px 8px;
   border: 1px solid var(--border-mid);
   border-radius: 999px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.68rem;
   color: var(--text-dim);
 }
@@ -1896,7 +1896,7 @@ button {
 }
 
 .hero-eyebrow {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1960,12 +1960,12 @@ button {
 .hero-btn--primary {
   border-color: var(--amber);
   background: var(--amber);
-  color: #0a0500;
+  color: var(--on-accent);
 }
 
 .hero-btn--primary:hover {
   background: var(--amber-light);
-  color: #0a0500;
+  color: var(--on-accent);
 }
 
 @media (max-width: 640px) {
@@ -2116,7 +2116,7 @@ button {
   padding: 8px 12px;
   border-radius: var(--radius-sm);
   background: var(--amber);
-  color: #0a0500;
+  color: var(--on-accent);
   font-weight: 700;
   text-decoration: none;
   transform: translateY(-200%);

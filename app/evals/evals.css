@@ -199,3 +199,8 @@
     margin-bottom: 8px;
   }
 }
+
+:root[data-theme='light'] .ev-status--fail,
+:root[data-theme='light'] .ev-bad {
+  color: #b91c1c;
+}

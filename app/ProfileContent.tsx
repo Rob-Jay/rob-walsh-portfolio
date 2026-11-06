@@ -26,10 +26,10 @@ function MessageText({ text }: { text: string }) {
 export default function ProfileContent() {
   return (
     <article className="ssr-profile">
-      <h1>Rob Walsh, Senior Software Engineer</h1>
+      <h2>Rob Walsh, Senior Software Engineer</h2>
       {CONVERSATIONS.map((conversation) => (
         <section key={conversation.id}>
-          <h2>{conversation.title}</h2>
+          <h3>{conversation.title}</h3>
           {conversation.thread
             .filter((message) => message.role === 'assistant')
             .map((message, i) => (
