@@ -8,6 +8,7 @@ import DublinSkyline from './components/DublinSkyline.jsx'
 import TerminalStream from './components/TerminalStream.jsx'
 import TechStackViz from './components/TechStackViz.jsx'
 import TrainingWidget from './components/TrainingWidget.jsx'
+import Hero from './components/Hero.jsx'
 
 // ── Conversation definitions ──────────────────────────────────────────────────
 
@@ -512,6 +513,7 @@ function ContactSection() {
 
 export default function App() {
   const [activeId, setActiveId] = useState('intro')
+  const [heroDismissed, setHeroDismissed] = useState(false)
   const [threads, setThreads] = useState(() => {
     const init = {}
     CONVERSATIONS.forEach((c) => { init[c.id] = [] })
@@ -636,6 +638,7 @@ export default function App() {
   const sendMessage = async (overrideText) => {
     const text = (overrideText ?? input).trim()
     if (!text || userStreaming) return
+    setHeroDismissed(true)
 
     // Abort any pre-loaded stream that might be running in this conversation.
     // Capture convId now — the async closure must not read activeId later as it could change.
@@ -842,6 +845,8 @@ export default function App() {
         </header>
 
         {/* Thread */}
+        {activeId === 'intro' && !heroDismissed && <Hero onAsk={() => inputRef.current?.focus()} />}
+
         <div className="chat-thread" ref={threadRef} role="log" aria-live="polite" aria-label="Conversation">
           {currentThread.length === 0 && (
             <div className="chat-loading" aria-hidden="true">

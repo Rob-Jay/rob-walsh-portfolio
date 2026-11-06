@@ -1784,3 +1784,114 @@ button {
     display: none;
   }
 }
+/* Hero: sits above the chat on the opening conversation */
+.hero {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 28px clamp(16px, 6vw, 96px) 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.hero-title {
+  max-width: 22ch;
+  margin-top: 10px;
+  font-size: clamp(1.55rem, 4vw, 2.3rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.hero-proof {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+  list-style: none;
+}
+
+.hero-proof li {
+  padding-left: 10px;
+  border-left: 2px solid var(--amber);
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--border-mid);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.hero-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber-light);
+}
+
+.hero-btn--primary {
+  border-color: var(--amber);
+  background: var(--amber);
+  color: #0a0500;
+}
+
+.hero-btn--primary:hover {
+  background: var(--amber-light);
+  color: #0a0500;
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding-top: 16px;
+    padding-bottom: 14px;
+  }
+
+  .hero-proof {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .hero-proof li {
+    font-size: 0.78rem;
+  }
+
+  .hero-actions {
+    margin-top: 12px;
+    gap: 8px;
+  }
+}
+
+/* Short screens: keep room for the chat */
+@media (max-height: 640px) {
+  .hero-proof {
+    display: none;
+  }
+}
