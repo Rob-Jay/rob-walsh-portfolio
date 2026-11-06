@@ -11,6 +11,7 @@ import TrainingWidget from './components/TrainingWidget.jsx'
 import { CANNED_SOURCES, CONVERSATION_SOURCES } from './data/answerSources.js'
 import { CONVERSATIONS } from './data/conversations.js'
 import Hero from './components/Hero.jsx'
+import ThemeToggle from './components/ThemeToggle.jsx'
 
 
 
@@ -676,6 +677,8 @@ export default function App() {
             <span className="header-sep header-sep--hide" aria-hidden="true">·</span>
             <span className="header-location">Dublin, IE</span>
           </div>
+
+          <ThemeToggle />
 
           <div className="open-badge" aria-label="Open to work">
             <span className="open-dot" aria-hidden="true" />
