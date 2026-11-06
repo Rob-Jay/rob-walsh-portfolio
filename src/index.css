@@ -1784,3 +1784,20 @@ button {
     display: none;
   }
 }
+/* Source chips under rob-gpt answers */
+.source-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+  list-style: none;
+}
+
+.source-chip {
+  padding: 2px 8px;
+  border: 1px solid var(--border-mid);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--text-dim);
+}

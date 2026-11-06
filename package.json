@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "evals": "node scripts/run-evals.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.0.0",

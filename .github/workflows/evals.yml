@@ -1,0 +1,40 @@
+name: Weekly evals
+
+on:
+  schedule:
+    - cron: '17 6 * * 1' # Mondays, 06:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: weekly-evals
+  cancel-in-progress: false
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Calls the deployed site, so API usage is billed to the site's own key and no secret
+      # is needed here. A run with any errored case fails here and commits nothing.
+      - name: Run evals
+        env:
+          EVAL_URL: ${{ vars.EVAL_URL || 'https://rob-walsh-homepage.vercel.app' }}
+        run: npm run evals
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add evals/results.json
+          git commit -m "chore: update eval results"
+          git pull --rebase
+          git push
