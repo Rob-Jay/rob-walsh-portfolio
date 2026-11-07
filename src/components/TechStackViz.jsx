@@ -17,7 +17,7 @@ const GROUPS = [
   {
     name: 'Frontend',
     color: '#f472b6',
-    skills: ['React', 'TypeScript', 'Vite'],
+    skills: ['React', 'TypeScript', 'Next.js'],
   },
 ]
 
@@ -38,7 +38,7 @@ export default function TechStackViz() {
                 style={{
                   borderColor: `${group.color}2e`,
                   background: `${group.color}0d`,
-                  color: `${group.color}cc`,
+                  color: group.color,
                 }}
               >
                 {skill}

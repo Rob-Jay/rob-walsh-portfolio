@@ -16,7 +16,7 @@ const COLORS = {
   kw:      '#818cf8',
   fn:      '#34d399',
   var:     '#fbbf24',
-  comment: '#4a4870',
+  comment: '#8886b0',
   plain:   '#c4bef5',
 }
 

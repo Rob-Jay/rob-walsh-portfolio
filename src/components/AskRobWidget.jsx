@@ -174,7 +174,7 @@ function AskRobWidget() {
           <div className="ask-rob-messages">
             {messages.length === 0 && (
               <div className="ask-rob-empty">
-                <p>Hey! Ask me anything about Rob — his experience, tech stack, projects, or what he's working on.</p>
+                <p>Hey! Ask me anything about Rob — his experience, tech stack, projects, or what he&apos;s working on.</p>
                 <div className="ask-rob-suggestions">
                   {SUGGESTIONS.map((s) => (
                     <button

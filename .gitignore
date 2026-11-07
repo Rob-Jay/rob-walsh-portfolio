@@ -1,6 +1,5 @@
 node_modules/
 dist/
-.vite/
 .idea/
 .next/
 next-env.d.ts
@@ -9,3 +8,5 @@ next-env.d.ts
 
 .vercel
 .claude/
+*.tsbuildinfo
+.lighthouseci/

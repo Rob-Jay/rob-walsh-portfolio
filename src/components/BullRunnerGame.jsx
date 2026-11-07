@@ -665,6 +665,8 @@ function BullRunnerGame() {
               width={CW}
               height={CH}
               className="bull-canvas"
+              role="img"
+              aria-label="Dev Run, a side-scrolling game. Space or up arrow jumps, S or down arrow ducks."
               onClick={phase === "playing" ? doJump : undefined}
               style={{ cursor: phase === "playing" ? "pointer" : "default" }}
             />

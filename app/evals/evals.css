@@ -1,0 +1,206 @@
+/* The main stylesheet locks the body to the viewport for the chat, so this page scrolls itself. */
+.ev-page {
+  height: 100dvh;
+  overflow-y: auto;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.ev-nav,
+.ev-main {
+  max-width: 820px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.ev-nav {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+}
+
+.ev-nav a {
+  color: var(--text-dim);
+  text-decoration: none;
+}
+
+.ev-nav a:hover {
+  color: var(--amber);
+}
+
+.ev-main {
+  padding-top: 40px;
+  padding-bottom: 80px;
+}
+
+.ev-title {
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.ev-intro {
+  max-width: 62ch;
+  margin-top: 14px;
+  line-height: 1.55;
+  color: var(--text-dim);
+}
+
+.ev-meta {
+  margin-top: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.ev-notice {
+  margin-top: 20px;
+  padding: 12px 14px;
+  border-left: 2px solid var(--amber);
+  background: var(--amber-dim);
+  line-height: 1.5;
+}
+
+.ev-table-wrap {
+  margin-top: 28px;
+  overflow-x: auto;
+}
+
+.ev-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.ev-table caption {
+  margin-bottom: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  text-align: left;
+  color: var(--amber);
+}
+
+.ev-table th,
+.ev-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.ev-table th:first-child {
+  padding-left: 0;
+  text-align: left;
+}
+
+.ev-table thead th {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.ev-table tfoot th,
+.ev-table tfoot td {
+  border-bottom: 0;
+  font-weight: 700;
+}
+
+.ev-rate {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--amber);
+}
+
+.ev-heading {
+  margin-top: 40px;
+  font-size: 1.15rem;
+}
+
+.ev-cases {
+  margin-top: 12px;
+  list-style: none;
+}
+
+.ev-case {
+  border-top: 1px solid var(--border);
+}
+
+.ev-case summary {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 12px 0;
+  cursor: pointer;
+}
+
+.ev-case-prompt {
+  min-width: 0;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.ev-status {
+  flex-shrink: 0;
+  width: 44px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.ev-status--pass,
+.ev-ok {
+  color: var(--green);
+}
+
+.ev-status--fail,
+.ev-bad {
+  color: #f87171;
+}
+
+.ev-status--error {
+  color: var(--amber);
+}
+
+.ev-detail {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  gap: 8px 12px;
+  padding: 0 0 16px 56px;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.ev-detail dt {
+  color: var(--text-dim);
+}
+
+.ev-detail dd {
+  overflow-wrap: anywhere;
+}
+
+.ev-reply {
+  white-space: pre-wrap;
+}
+
+.ev-checks {
+  list-style: none;
+}
+
+@media (max-width: 640px) {
+  .ev-detail {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    padding-left: 0;
+  }
+
+  .ev-detail dd {
+    margin-bottom: 8px;
+  }
+}
+
+:root[data-theme='light'] .ev-status--fail,
+:root[data-theme='light'] .ev-bad {
+  color: #b91c1c;
+}

@@ -8,203 +8,27 @@ import DublinSkyline from './components/DublinSkyline.jsx'
 import TerminalStream from './components/TerminalStream.jsx'
 import TechStackViz from './components/TechStackViz.jsx'
 import TrainingWidget from './components/TrainingWidget.jsx'
+import { CANNED_SOURCES, CONVERSATION_SOURCES } from './data/answerSources.js'
+import { CONVERSATIONS } from './data/conversations.js'
+import Hero from './components/Hero.jsx'
+import ThemeToggle from './components/ThemeToggle.jsx'
 
-// ── Conversation definitions ──────────────────────────────────────────────────
 
-const CONVERSATIONS = [
-  {
-    id: 'intro',
-    title: 'About Rob',
-    icon: '◈',
-    introArtifact: true,
-    thread: [
-      { role: 'user', content: 'Hey — tell me about yourself.' },
-      {
-        role: 'assistant',
-        content:
-          "I'm Rob Walsh, a Senior Software Engineer based in Dublin. Five years building production backend systems in financial services — Java, Spring Boot, microservices at scale at Mastercard and J.P. Morgan.\n\nThe direction I'm moving: I want to work on AI itself. Integrating AI services into products, engineering the systems that connect models to the real world, and building the tooling around them. I led the LLM chatbot backend at Mastercard, built a personal AI training engine for my ultramarathon prep, and this portfolio is a live Claude integration I built end-to-end.\n\nI want the engineering work to be the AI — not a feature on the roadmap.",
-      },
-    ],
-    followups: ["What's your tech stack?", 'Tell me about your AI work', 'Are you open to work?'],
-  },
-  {
-    id: 'contact',
-    title: 'Get in Touch',
-    icon: '◇',
-    contactArtifact: true,
-    thread: [
-      { role: 'user', content: 'How do I get in touch with Rob?' },
-      {
-        role: 'assistant',
-        content:
-          "All contact details are below — email is the fastest. There's also a message composer if you'd like to write something directly:",
-      },
-    ],
-    followups: ['Tell me about yourself', 'Are you open to work?'],
-  },
-  {
-    id: 'stack',
-    title: 'Tech Stack',
-    icon: '⬡',
-    stackArtifact: true,
-    toolCall: {
-      name: 'get_profile',
-      input: { section: 'technical_skills', format: 'grouped' },
-      result: 'Returned 4 skill groups · 18 technologies',
-    },
-    thread: [
-      { role: 'user', content: "What's your tech stack?" },
-      {
-        role: 'assistant',
-        content:
-          'Backend core: Java, Spring Boot, microservices, REST APIs, Spring Security, OAuth2/JWT — that\'s where most of my professional experience lives.\n\nPlatform layer: Kafka for event-driven systems, API Gateway, Docker, Kubernetes, AWS and Azure. Full observability stack in production — metrics, tracing, alerting.\n\nAI/LLM: Claude API with streaming and tool use, RAG retrieval flows, embeddings, vector search. This portfolio uses Claude Haiku — source on GitHub.\n\nFrontend when the project needs it: React, TypeScript. You\'re looking at a live example right now.',
-      },
-    ],
-    followups: ['Tell me about the LLM work', 'How do you approach system design?', 'Tell me about the UTMB training engine'],
-  },
-  {
-    id: 'ai',
-    title: 'AI & Agent Work',
-    icon: '⟳',
-    aiArtifact: true,
-    toolCall: {
-      name: 'search_knowledge_base',
-      input: { query: 'AI LLM agentic experience', top_k: 4, sources: ['professional', 'personal'] },
-      result: '4 documents retrieved · 3.1 kb',
-    },
-    thread: [
-      { role: 'user', content: 'Tell me about your AI and agent work.' },
-      {
-        role: 'assistant',
-        content:
-          "At Mastercard I led backend design for an internal LLM-powered chatbot — an enterprise data ingestion pipeline feeding a hosted LLM, with streaming responses back to the client. Similar in principle to how frontier models are built: knowledge is processed into the model's context rather than retrieved on demand. The architecture keeps the ingestion layer and the LLM provider independently swappable.\n\nPersonally: I built an LLM-powered training engine for my UTMB ultramarathon prep. It ingests my Strava activity data, retrieves relevant training history through a vector search layer, and generates adaptive weekly plans based on current fitness and race timeline.\n\nThis portfolio is also real: character-by-character streaming, Claude API, per-conversation state management. Source is on GitHub.",
-      },
-    ],
-    followups: ['Tell me about the LLM work', 'What AI frameworks have you used?', 'Tell me about the UTMB training engine'],
-  },
-  {
-    id: 'work',
-    title: 'Open to Work?',
-    icon: '◎',
-    thread: [
-      { role: 'user', content: 'Are you actively looking for a new role?' },
-      {
-        role: 'assistant',
-        content:
-          "Yes — actively. The title is there (Senior SE, Mastercard, Feb 2026), but the work I want is different: I want to build AI, integrate AI, and ship AI — not support a product that happens to use it.\n\nWhat that looks like:\n• Using AI — integrating LLM APIs, building AI-powered features into real products\n• Integrating services with AI — connecting models to data, systems, and workflows\n• Creating AI tooling — agents, inference pipelines, evaluation, fine-tuning infrastructure\n\nFive years in production backend engineering gives me the foundation. I want to point it at AI as the actual work. Senior backend or platform roles, hybrid or remote from Dublin.\n\nEmail or LinkedIn. I respond quickly.",
-      },
-    ],
-    followups: ['Tell me about yourself', "What's your tech stack?", 'Tell me about your AI work'],
-  },
-  {
-    id: 'career',
-    title: 'Career Journey',
-    icon: '⬦',
-    careerArtifact: true,
-    toolCall: {
-      name: 'get_timeline',
-      input: { entity: 'Rob Walsh', type: 'employment', order: 'chronological' },
-      result: 'Returned 3 positions · 5 years of experience',
-    },
-    thread: [
-      { role: 'user', content: 'Walk me through your career so far.' },
-      {
-        role: 'assistant',
-        content:
-          "Started in 2021 at J.P. Morgan Dublin as a Software Engineer — building backend services for internal financial systems in Java and Spring Boot. Regulated environment: reliability and auditability weren't optional.\n\nMoved to Mastercard in 2023 as SWE II. The scope grew quickly — microservices architecture, event-driven pipelines with Kafka, API Gateway, cross-team technical work. Promoted to Senior Software Engineer in February 2026.\n\nThe defining project: leading backend design for an internal LLM-powered chatbot — an enterprise knowledge ingestion pipeline paired with a streaming response layer. That work made the direction clear — AI-native systems are where I want to build next.",
-      },
-    ],
-    followups: ['What did you build at Mastercard?', 'Tell me about the UTMB training engine', 'Are you open to work?'],
-  },
-  {
-    id: 'outside',
-    title: 'Life Outside Code',
-    icon: '◉',
-    trainingArtifact: true,
-    thread: [
-      { role: 'user', content: 'What do you get up to outside of work?' },
-      {
-        role: 'assistant',
-        content:
-          "Ultramarathons. Training for UTMB — Ultra-Trail du Mont-Blanc, 171km through the Alps. It demands the same systematic thinking as engineering: load management, progressive overload, adaptation cycles.\n\nI built a tool around it: an LLM-powered training engine that ingests my Strava activity data, retrieves relevant training history through a RAG layer, and generates adaptive weekly plans based on current fitness, fatigue, and timeline to race. It's the most-used personal project I have.\n\nOutside running: I find the overlap between what's technically possible and what's worth building more interesting than either question alone. That's shaped most of my career choices.\n\nCurrent training snapshot:",
-      },
-    ],
-    followups: ['Tell me about the UTMB training engine', 'Are you open to work?', 'Tell me about yourself'],
-  },
-  {
-    id: 'how-built',
-    title: 'How This Was Built',
-    icon: '⌬',
-    howBuiltArtifact: true,
-    toolCall: {
-      name: 'analyze_codebase',
-      input: { repo: 'rob-walsh-portfolio', include: ['streaming', 'state', 'api'] },
-      result: 'Analysed 6 modules · 847 lines · 1 AI integration',
-    },
-    thread: [
-      { role: 'user', content: 'How was this portfolio built?' },
-      {
-        role: 'assistant',
-        content:
-          "React 18 and Vite, deployed to GitHub Pages. Intentionally a single component — no router, no state management library — because the problem doesn't need more complexity than that.\n\nThe AI layer: Claude Haiku via the Anthropic SDK running directly in the browser. Each conversation pre-loads with character-by-character streaming so there's always something moving on arrival. User messages hit the live API with full conversation history as context.\n\nThe interesting engineering problem: React 18 Strict Mode double-invokes effects in development, which caused two simultaneous streams writing into the same message bubble. Fixed with a ref-based guard that updates synchronously — unlike state, the second invocation sees it immediately and exits.\n\nTool call bubbles, per-conversation state, abort controllers for stream cancellation, an embedded game, a live training widget — all in one file. Source is on GitHub.",
-      },
-    ],
-    followups: ["What's your tech stack?", 'Tell me about your AI work', 'Are you open to work?'],
-  },
-  {
-    id: 'game',
-    title: 'Play a Game',
-    icon: '▶',
-    gameArtifact: true,
-    thread: [
-      { role: 'user', content: 'Is there a game I can play?' },
-      {
-        role: 'assistant',
-        content:
-          "Yes — I built a side-scroller called Dev Run. Jump over bugs, duck under server error beams, dodge the stack traces. The difficulty ramps up the further you go, with combo obstacles at higher speeds.\n\nSpace or ↑ to jump · S or ↓ to duck · Double jump available. Give it a run:",
-      },
-    ],
-  },
-]
-
-// ── System prompt for live API ────────────────────────────────────────────────
-
-const SYSTEM_PROMPT = `You are rob-gpt, the AI assistant on Rob Walsh's portfolio. You answer questions about Rob clearly and confidently — as if you know him well.
-
-## Who Rob is
-Senior Software Engineer based in Dublin, Ireland. Five years building production backend systems in financial services at Mastercard and J.P. Morgan. Promoted to Senior SE at Mastercard in February 2026.
-
-## Technical background
-- Core: Java, Spring Boot, microservices, REST APIs, Spring Security, OAuth2/JWT
-- Platform: Kafka, API Gateway, Docker, Kubernetes, AWS, Azure
-- AI/LLM: architected the backend for an internal LLM-powered chatbot at Mastercard (enterprise data ingestion pipeline + streaming response layer); built a personal RAG-based training engine using Strava data and vector search
-- Frontend when needed: React, TypeScript — this portfolio is a live example built and deployed by Rob
-
-## What he's looking for
-Roles where the engineering work IS AI — integrating LLM APIs into products, building agent systems, creating AI tooling or inference pipelines. Senior backend or platform engineer. Hybrid or remote from Dublin. He wants the AI to be the actual engineering problem, not a feature on the roadmap.
-
-## Availability and contact
-Actively looking now. Happy to move quickly.
-- Email: robertjaywalsh@gmail.com (fastest)
-- LinkedIn: linkedin.com/in/robert-walsh-937703218
-- GitHub: github.com/Rob-Jay
-- CV available to download on this page
-
-## Outside work
-Training for UTMB — Ultra-Trail du Mont-Blanc, 171km through the Alps. He built an LLM-powered training engine for it: ingests Strava data, retrieves relevant history via vector search, generates adaptive weekly plans.
-
-## How to respond
-- Be concise and direct. Most answers should be 2–5 sentences.
-- Tone: confident, human, not corporate.
-- If asked about salary expectations, say Rob is open to discussing and recommends reaching out directly via email.
-- If asked something you don't know about Rob, say so briefly and suggest contacting him directly.
-- Only answer questions about Rob. For anything off-topic, politely redirect.`
 
 // ── Streaming helpers ─────────────────────────────────────────────────────────
 
 // Stream word-by-word so complete words appear at once (no mid-word splits).
 // 22ms per word ≈ fast reading pace; punctuation pauses add natural rhythm.
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
 async function streamText(text, onChunk, signal) {
+  // Word-by-word typing is motion too: show the whole answer at once.
+  if (prefersReducedMotion()) {
+    if (!signal?.aborted) onChunk(text)
+    return
+  }
+
   const WORD_MS = 22
   // Split into alternating word/whitespace tokens preserving all spacing
   const tokens = text.match(/[^\s]+|\s+/g) ?? []
@@ -245,7 +69,7 @@ const CANNED_ANSWERS = {
       input: { section: 'technical_skills', format: 'grouped' },
       result: 'Returned 4 skill groups · 18 technologies',
     },
-    content: "Backend core: Java, Spring Boot, microservices, REST APIs, Spring Security, OAuth2/JWT — that's where most of my professional experience lives.\n\nPlatform layer: Kafka for event-driven systems, API Gateway, Docker, Kubernetes, AWS and Azure. Full observability stack in production — metrics, tracing, alerting.\n\nAI/LLM: Claude API with streaming and tool use, RAG retrieval flows, embeddings, vector search. This portfolio uses Claude Haiku — source on GitHub.\n\nFrontend when the project needs it: React, TypeScript. You're looking at a live example right now.",
+    content: "Backend core: Java, Spring Boot, microservices, REST APIs, Spring Security, OAuth2/JWT — that's where most of my professional experience lives.\n\nPlatform layer: Kafka for event-driven systems, API Gateway, Docker, Kubernetes, AWS and Azure. Full observability stack in production — metrics, tracing, alerting.\n\nAI/LLM: Claude API with streaming and tool use, RAG retrieval flows, embeddings, vector search. This portfolio uses Claude Sonnet — source on GitHub.\n\nFrontend when the project needs it: React, TypeScript. You're looking at a live example right now.",
   },
 
   "Tell me about your AI work": {
@@ -438,6 +262,7 @@ function ContactForm() {
     <div className="contact-form">
       <textarea
         className="contact-textarea"
+        aria-label="Your message to Rob"
         placeholder="Write your message to Rob…"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
@@ -512,6 +337,7 @@ function ContactSection() {
 
 export default function App() {
   const [activeId, setActiveId] = useState('intro')
+  const [heroDismissed, setHeroDismissed] = useState(false)
   const [threads, setThreads] = useState(() => {
     const init = {}
     CONVERSATIONS.forEach((c) => { init[c.id] = [] })
@@ -534,9 +360,17 @@ export default function App() {
   // firing two simultaneous streams into the same message.
   const playedRef = useRef(new Set())
 
+  // Escape closes the mobile drawer
+  useEffect(() => {
+    if (!sidebarOpen) return
+    const onKeyDown = (e) => { if (e.key === 'Escape') setSidebarOpen(false) }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [sidebarOpen])
+
   // Scroll to bottom whenever thread content or active conversation changes
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    bottomRef.current?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
   }, [threads, activeId])
 
   // Append one character to the last message in a given conversation
@@ -551,6 +385,15 @@ export default function App() {
   }, [])
 
   // Mark the last message in a conversation as done streaming
+  const setLastSources = useCallback((convId, sources) => {
+    if (!sources?.length) return
+    setThreads((prev) => {
+      const t = [...prev[convId]]
+      t[t.length - 1] = { ...t[t.length - 1], sources }
+      return { ...prev, [convId]: t }
+    })
+  }, [])
+
   const finishStream = useCallback((convId) => {
     setThreads((prev) => {
       const t = [...prev[convId]]
@@ -600,6 +443,7 @@ export default function App() {
 
     if (!ctrl.signal.aborted) {
       finishStream(convId)
+      setLastSources(convId, CONVERSATION_SOURCES[convId])
       const artifactRole = conv.gameArtifact ? 'game'
         : conv.trainingArtifact ? 'training'
         : conv.contactArtifact ? 'contact'
@@ -617,7 +461,7 @@ export default function App() {
       }
       setStreamedConvs((prev) => ({ ...prev, [convId]: true }))
     }
-  }, [appendChar, finishStream])
+  }, [appendChar, finishStream, setLastSources])
 
   // Trigger playback when active conversation changes
   useEffect(() => {
@@ -636,6 +480,7 @@ export default function App() {
   const sendMessage = async (overrideText) => {
     const text = (overrideText ?? input).trim()
     if (!text || userStreaming) return
+    setHeroDismissed(true)
 
     // Abort any pre-loaded stream that might be running in this conversation.
     // Capture convId now — the async closure must not read activeId later as it could change.
@@ -652,6 +497,7 @@ export default function App() {
       .filter((m) => !m.streaming && (m.role === 'user' || m.role === 'assistant'))
       .concat(userMsg)
       .map((m) => ({ role: m.role, content: m.content }))
+      .slice(-9) // stays within the /api/chat size limits; odd count starts on a user turn
 
     // Finalise any in-progress auto-play cursor, then add user msg + new assistant bubble
     setThreads((prev) => {
@@ -662,6 +508,8 @@ export default function App() {
 
     const ctrl = new AbortController()
     abortRef.current = ctrl
+
+    let sources = CANNED_SOURCES[text]
 
     if (CANNED_ANSWERS[text]) {
       const canned = CANNED_ANSWERS[text]
@@ -688,14 +536,20 @@ export default function App() {
         const response = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: history, system: SYSTEM_PROMPT }),
+          body: JSON.stringify({ messages: history }),
           signal: ctrl.signal,
         })
-        if (!response.ok) throw new Error(`API error ${response.status}`)
+        if (!response.ok) throw Object.assign(new Error(`API error ${response.status}`), { status: response.status })
+        try {
+          sources = JSON.parse(response.headers.get('X-Rob-Sources') ?? '[]')
+        } catch {
+          sources = []
+        }
 
         const reader = response.body.getReader()
         const decoder = new TextDecoder()
         let buf = ''
+        let gotText = false
 
         outer: while (true) {
           const { done, value } = await reader.read()
@@ -706,17 +560,21 @@ export default function App() {
           for (const line of lines) {
             if (ctrl.signal.aborted) break outer
             if (line.startsWith('0:')) {
-              try { appendChar(convId, JSON.parse(line.slice(2))) } catch {}
+              try { appendChar(convId, JSON.parse(line.slice(2))); gotText = true } catch {}
             }
           }
         }
+        // The model call failed mid-stream: the response was 200 but carried no text.
+        if (!gotText && !ctrl.signal.aborted) throw new Error('Empty response')
       } catch (err) {
         if (!ctrl.signal.aborted) {
           setThreads((prev) => {
             const t = [...prev[convId]]
             t[t.length - 1] = {
               ...t[t.length - 1],
-              content: 'Something went wrong — try reaching Rob directly via the links in the sidebar.',
+              content: err.status === 429
+                ? 'That is a lot of questions in a short time. Try again in a minute, or reach Rob directly via the links in the sidebar.'
+                : 'Something went wrong — try reaching Rob directly via the links in the sidebar.',
               streaming: false,
             }
             return { ...prev, [convId]: t }
@@ -727,7 +585,10 @@ export default function App() {
       }
     }
 
-    if (!ctrl.signal.aborted) finishStream(convId)
+    if (!ctrl.signal.aborted) {
+      finishStream(convId)
+      setLastSources(convId, sources)
+    }
     setUserStreaming(false)
   }
 
@@ -748,6 +609,7 @@ export default function App() {
 
   return (
     <div className="chat-app">
+      <a className="skip-link" href="#chat-input">Skip to chat</a>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} aria-hidden="true" />
@@ -835,14 +697,18 @@ export default function App() {
             <span className="header-location">Dublin, IE</span>
           </div>
 
-          <div className="open-badge" aria-label="Open to work">
+          <ThemeToggle />
+
+          <div className="open-badge" role="img" aria-label="Open to work">
             <span className="open-dot" aria-hidden="true" />
             <span>Open to work</span>
           </div>
         </header>
 
         {/* Thread */}
-        <div className="chat-thread" ref={threadRef} role="log" aria-live="polite" aria-label="Conversation">
+        {activeId === 'intro' && !heroDismissed && <Hero onAsk={() => inputRef.current?.focus()} />}
+
+        <div className="chat-thread" ref={threadRef} tabIndex={0} role="log" aria-live="polite" aria-label="Conversation">
           {currentThread.length === 0 && (
             <div className="chat-loading" aria-hidden="true">
               <div className="loading-dots">
@@ -887,7 +753,7 @@ export default function App() {
                 <div className="msg-bubble">
                   {msg.streaming && !msg.content
                     ? <div className="thinking-dots" aria-label="Thinking"><span /><span /><span /></div>
-                    : <><MsgContent content={msg.content} />{msg.streaming && <span className="stream-cursor" aria-hidden="true" />}</>
+                    : <><MsgContent content={msg.content} />{msg.streaming && <span className="stream-cursor" aria-hidden="true" />}{!msg.streaming && msg.sources?.length > 0 && <SourceChips sources={msg.sources} />}</>
                   }
                 </div>
                 {msg.role === 'user' && (
@@ -922,6 +788,7 @@ export default function App() {
           <div className="chat-input-row">
             <textarea
               ref={inputRef}
+              id="chat-input"
               className="chat-input"
               placeholder="Ask anything about Rob…"
               value={input}
@@ -958,6 +825,16 @@ export default function App() {
 
 // ── Message content renderer ──────────────────────────────────────────────────
 // Handles: \n\n paragraph breaks, \n line breaks, and • / - bullet lists.
+
+function SourceChips({ sources }) {
+  return (
+    <ul className="source-chips" aria-label="Sources">
+      {sources.map((source) => (
+        <li key={source} className="source-chip">{source}</li>
+      ))}
+    </ul>
+  )
+}
 
 function MsgContent({ content }) {
   if (!content) return null
