@@ -46,6 +46,11 @@ export async function POST(req: Request) {
     system: buildSystemPrompt(chunks),
     messages,
     maxTokens: MAX_OUTPUT_TOKENS,
+    // The stream only tells the client "An error occurred", so record the cause here.
+    onError: ({ error }) => {
+      const err = error as { name?: string; message?: string; statusCode?: number; responseBody?: string }
+      console.error('chat stream error', err?.name, err?.statusCode, err?.message, err?.responseBody?.slice(0, 300))
+    },
   })
 
   const sources = Array.from(new Set(chunks.map((chunk) => chunk.source)))
