@@ -4,7 +4,7 @@
 //   EVAL_URL=https://your-deployment.vercel.app npm run evals
 //
 // EVAL_URL defaults to http://localhost:3000. EVAL_DELAY_MS sets the gap between cases and
-// defaults to 6500, which stays under the chat route's limit of 10 requests a minute.
+// defaults to 10500, which stays under the chat route's limit of 6 requests a minute.
 //
 // Exits 1 if any case could not be run. Results are not written if no case could be run.
 
@@ -110,7 +110,7 @@ export function summarize(results) {
 
 async function main() {
   const baseUrl = (process.env.EVAL_URL ?? 'http://localhost:3000').replace(/\/$/, '')
-  const delayMs = Number(process.env.EVAL_DELAY_MS ?? 6500)
+  const delayMs = Number(process.env.EVAL_DELAY_MS ?? 10500)
   const casesPath = process.env.EVAL_CASES ?? join(ROOT, 'evals', 'cases.json')
   const resultsPath = process.env.EVAL_RESULTS ?? join(ROOT, 'evals', 'results.json')
   const { cases } = JSON.parse(readFileSync(casesPath, 'utf8'))

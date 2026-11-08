@@ -92,6 +92,12 @@ export function retrieve(question: string, previousQuestion?: string): Chunk[] {
     .map(({ chunk: { source, heading, text } }) => ({ source, heading, text }))
 }
 
+// Used when the model is unavailable: the best matching note, quoted as is.
+export function notesAnswer(chunks: Chunk[]): string {
+  const best = chunks[0]
+  return `From my notes (${best.heading}): ${best.text}`
+}
+
 export const REFUSAL =
   "I can only answer from my notes on Rob, a Senior Software Engineer in Dublin, and they don't cover that. Ask about his experience, skills, AI work or availability, or email him at robertjaywalsh@gmail.com."
 

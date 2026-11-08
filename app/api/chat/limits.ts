@@ -1,14 +1,17 @@
 // Haiku 5.5 thinks by default and thinking counts toward this cap, so leave room above a short answer.
-export const MAX_OUTPUT_TOKENS = 1024
-export const MODEL = 'claude-haiku-5-5'
+export const MAX_OUTPUT_TOKENS = 800
+// AI Gateway model ID. Override with AI_GATEWAY_MODEL, e.g. to a model on the free tier.
+export const MODEL = process.env.AI_GATEWAY_MODEL || 'anthropic/claude-haiku-5.5'
 export const MAX_USER_MESSAGE_CHARS = 500
 export const MAX_TOTAL_CHARS = 12000
 export const MAX_MESSAGES = 30
 
 const MINUTE_MS = 60_000
 const DAY_MS = 24 * 60 * MINUTE_MS
-const PER_MINUTE = 10
-const PER_DAY = 100
+const PER_MINUTE = 6
+const PER_DAY = 40
+// Model calls per instance per day across all visitors; past this, answers come from the notes.
+const MODEL_CALLS_PER_DAY = 300
 const MAX_TRACKED_IPS = 10_000
 
 export type ChatMessage = { role: 'user' | 'assistant'; content: string }
@@ -37,6 +40,32 @@ export function checkRateLimit(ip: string, now = Date.now()): { ok: boolean; ret
   recent.push(now)
   hits.set(ip, recent)
   return { ok: true, retryAfter: 0 }
+}
+
+let modelDay = ''
+let modelCalls = 0
+
+export function checkModelBudget(now = new Date()): boolean {
+  const day = now.toISOString().slice(0, 10)
+  if (day !== modelDay) {
+    modelDay = day
+    modelCalls = 0
+  }
+  if (modelCalls >= MODEL_CALLS_PER_DAY) return false
+  modelCalls++
+  return true
+}
+
+// Browsers always send Origin on a cross-site POST. Reject other sites calling the
+// route from a visitor's browser; requests without Origin still face the limits.
+export function isAllowedOrigin(req: Request): boolean {
+  const origin = req.headers.get('origin')
+  if (!origin) return true
+  try {
+    return new URL(origin).host === req.headers.get('host')
+  } catch {
+    return false
+  }
 }
 
 export function clientIp(req: Request): string {
