@@ -1,10 +1,23 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono, Space_Grotesk } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 
-// Self-hosted at build time with size-matched fallbacks, so text doesn't jump when the fonts load.
-const sans = Space_Grotesk({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-sans-face', display: 'swap' })
-const mono = JetBrains_Mono({ subsets: ['latin'], weight: ['400', '500', '700'], variable: '--font-mono-face', display: 'swap' })
+// Font files live in the repo (OFL, from Fontsource), so builds never depend on Google Fonts.
+// next/font adds size-matched fallbacks, so text doesn't jump when the fonts load.
+const sans = localFont({
+  src: './fonts/SpaceGrotesk-Variable.woff2',
+  weight: '300 700',
+  variable: '--font-sans-face',
+  display: 'swap',
+  fallback: ['system-ui', 'sans-serif'],
+})
+const mono = localFont({
+  src: './fonts/JetBrainsMono-Variable.woff2',
+  weight: '100 800',
+  variable: '--font-mono-face',
+  display: 'swap',
+  fallback: ['monospace'],
+})
 
 const SITE_URL = 'https://rob-walsh-homepage.vercel.app'
 
