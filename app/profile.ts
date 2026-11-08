@@ -51,6 +51,9 @@ export type Project = {
   context: string
   summary: string
   points: string[]
+  // Left-to-right flow drawn as a small diagram on the card
+  flow: string[]
+  tags: string[]
   links?: { label: string; href: string }[]
 }
 
@@ -64,6 +67,8 @@ export const PROJECTS: Project[] = [
       'Streaming response layer back to the client',
       'Ingestion and LLM provider deployable independently',
     ],
+    flow: ['Enterprise data', 'Ingestion', 'Hosted LLM', 'Streamed reply'],
+    tags: ['Java', 'Spring Boot', 'LLM', 'Streaming'],
   },
   {
     name: 'rob-gpt',
@@ -75,6 +80,8 @@ export const PROJECTS: Project[] = [
       'Per-IP rate limits and input caps, with the prompt kept server-side',
       '25-case eval suite for facts, refusals and prompt injection, re-run weekly in CI',
     ],
+    flow: ['Question', 'Limits', 'Note retrieval', 'Claude Haiku', 'Cited answer'],
+    tags: ['Next.js', 'Claude', 'RAG', 'Evals', 'Vercel'],
     links: [
       { label: 'Evals', href: '/evals' },
       { label: 'Source', href: SOURCE },
@@ -91,3 +98,33 @@ export const SKILLS: { group: string; items: string[] }[] = [
 
 export const LOOKING_FOR =
   'Senior backend, platform or AI engineering roles where the AI is the engineering problem. Hybrid or remote from Dublin, and happy to move quickly.'
+
+export const FACTS: { label: string; value: string }[] = [
+  { label: 'Now', value: 'Senior Software Engineer, Mastercard' },
+  { label: 'Before', value: 'Software Engineer, J.P. Morgan' },
+  { label: 'Based', value: 'Dublin, Ireland' },
+  { label: 'Focus', value: 'Backend and AI/LLM systems' },
+  { label: 'Open to', value: 'Hybrid or remote' },
+]
+
+export const STATS: { value: string; label: string }[] = [
+  { value: '5 yrs', label: 'production backend in finance' },
+  { value: '2', label: 'global financial firms' },
+  { value: '2', label: 'junior engineers mentored' },
+  { value: '2026', label: 'promoted to Senior' },
+]
+
+export const PRINCIPLES: { title: string; body: string }[] = [
+  {
+    title: 'Failure modes first',
+    body: 'Start from requirements and what breaks, not the happy path. Then work back to consistency guarantees, data flow and failure domains.',
+  },
+  {
+    title: 'Contracts before code',
+    body: 'Sequence diagram first, find the bounded contexts, and get the team to agree on contracts before anyone writes code.',
+  },
+  {
+    title: 'Context before model',
+    body: 'In AI systems, get data ingestion and the context layer right before tuning the model. The model can’t fix bad input.',
+  },
+]

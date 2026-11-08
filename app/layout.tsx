@@ -1,5 +1,10 @@
 import type { Metadata } from 'next'
+import { JetBrains_Mono, Space_Grotesk } from 'next/font/google'
 import './globals.css'
+
+// Self-hosted at build time with size-matched fallbacks, so text doesn't jump when the fonts load.
+const sans = Space_Grotesk({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-sans-face', display: 'swap' })
+const mono = JetBrains_Mono({ subsets: ['latin'], weight: ['400', '500', '700'], variable: '--font-mono-face', display: 'swap' })
 
 const SITE_URL = 'https://rob-walsh-homepage.vercel.app'
 
@@ -33,7 +38,7 @@ const THEME_SCRIPT = `try {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>

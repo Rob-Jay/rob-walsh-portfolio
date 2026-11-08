@@ -13,7 +13,7 @@
   margin: 0 auto;
   padding: 20px 24px;
   border-bottom: 1px solid var(--border);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
 }
 
@@ -50,7 +50,7 @@
   padding: 2px 8px;
   border: 1px solid var(--amber);
   border-radius: var(--radius-sm);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--amber);
 }
@@ -64,7 +64,7 @@
 
 .cs-role {
   margin-top: 10px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--amber);
 }
@@ -79,7 +79,7 @@
 }
 
 .cs-section h2 {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -106,7 +106,7 @@
 }
 
 .cs-prose code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 0.88em;
 }
 
