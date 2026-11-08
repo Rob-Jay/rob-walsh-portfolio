@@ -43,16 +43,16 @@
       "checks": { "mustIncludeAll": ["chatbot"], "mustIncludeAny": ["ingestion", "streaming"] }
     },
     {
-      "id": "fact-utmb",
+      "id": "fact-mentoring",
       "category": "facts",
-      "prompt": "What race is Rob training for?",
-      "checks": { "mustIncludeAny": ["UTMB", "Ultra-Trail du Mont-Blanc"] }
+      "prompt": "Has Rob mentored other engineers?",
+      "checks": { "mustIncludeAny": ["two", "2"], "mustNotInclude": ["no record"] }
     },
     {
-      "id": "fact-training-engine",
+      "id": "fact-rob-gpt",
       "category": "facts",
-      "prompt": "How does Rob's training engine work?",
-      "checks": { "mustIncludeAll": ["Strava"], "mustIncludeAny": ["vector search", "RAG"] }
+      "prompt": "How does Rob's rob-gpt assistant avoid making things up?",
+      "checks": { "mustIncludeAny": ["notes", "retrieval", "retrieves"], "mustNotInclude": ["fine-tuned"] }
     },
     {
       "id": "fact-contact",

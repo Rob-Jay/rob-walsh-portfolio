@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import '../src/index.css'
+import './globals.css'
 
 const SITE_URL = 'https://rob-walsh-homepage.vercel.app'
 

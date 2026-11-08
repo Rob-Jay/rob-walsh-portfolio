@@ -1,4 +1,6 @@
-export const MAX_OUTPUT_TOKENS = 400
+// Haiku 5.5 thinks by default and thinking counts toward this cap, so leave room above a short answer.
+export const MAX_OUTPUT_TOKENS = 1024
+export const MODEL = 'claude-haiku-5-5'
 export const MAX_USER_MESSAGE_CHARS = 500
 export const MAX_TOTAL_CHARS = 12000
 export const MAX_MESSAGES = 30

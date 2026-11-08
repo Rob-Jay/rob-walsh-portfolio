@@ -1,9 +1,14 @@
-import { createAnthropic } from '@ai-sdk/anthropic'
-import { streamText } from 'ai'
+import Anthropic from '@anthropic-ai/sdk'
 import { REFUSAL, buildSystemPrompt, retrieve } from '../../../lib/knowledge'
-import { MAX_OUTPUT_TOKENS, checkRateLimit, clientIp, validateMessages } from './limits'
+import { MAX_OUTPUT_TOKENS, MODEL, checkRateLimit, clientIp, validateMessages } from './limits'
 
-const anthropic = createAnthropic()
+const client = new Anthropic()
+
+// Same line format as before: 0: carries text, 3: an error. The client and the
+// eval runner read this format.
+const encoder = new TextEncoder()
+const textLine = (text: string) => encoder.encode(`0:${JSON.stringify(text)}\n`)
+const errorLine = () => encoder.encode(`3:${JSON.stringify('An error occurred.')}\n`)
 
 export async function POST(req: Request) {
   const limit = checkRateLimit(clientIp(req))
@@ -30,29 +35,44 @@ export async function POST(req: Request) {
     userMessages[userMessages.length - 2]?.content,
   )
 
-  // Not covered by the notes: refuse here, without paying for a model call.
-  if (chunks.length === 0) {
-    return new Response(`0:${JSON.stringify(REFUSAL)}\n`, {
-      headers: {
-        'Content-Type': 'text/plain; charset=utf-8',
-        'X-Vercel-AI-Data-Stream': 'v1',
-        'X-Rob-Sources': '[]',
-      },
-    })
+  const headers = {
+    'Content-Type': 'text/plain; charset=utf-8',
+    'X-Rob-Sources': JSON.stringify(Array.from(new Set(chunks.map((chunk) => chunk.source)))),
   }
 
-  const result = streamText({
-    model: anthropic('claude-sonnet-4-6'),
-    system: buildSystemPrompt(chunks),
-    messages,
-    maxTokens: MAX_OUTPUT_TOKENS,
-    // The stream only tells the client "An error occurred", so record the cause here.
-    onError: ({ error }) => {
-      const err = error as { name?: string; message?: string; statusCode?: number; responseBody?: string }
-      console.error('chat stream error', err?.name, err?.statusCode, err?.message, err?.responseBody?.slice(0, 300))
+  // Not covered by the notes: refuse here, without paying for a model call.
+  if (chunks.length === 0) return new Response(textLine(REFUSAL), { headers })
+
+  const stream = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      try {
+        const reply = client.messages.stream({
+          model: MODEL,
+          max_tokens: MAX_OUTPUT_TOKENS,
+          // Short factual answers: low effort keeps thinking light and replies fast.
+          output_config: { effort: 'low' },
+          system: buildSystemPrompt(chunks),
+          messages,
+        })
+        for await (const event of reply) {
+          if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+            controller.enqueue(textLine(event.delta.text))
+          }
+        }
+        const final = await reply.finalMessage()
+        if (final.stop_reason === 'refusal') controller.enqueue(textLine(REFUSAL))
+      } catch (err) {
+        // The client only sees a generic error, so record the cause here.
+        if (err instanceof Anthropic.APIError) {
+          console.error('chat stream error', err.status, err.name, err.message.slice(0, 300))
+        } else {
+          console.error('chat stream error', err)
+        }
+        controller.enqueue(errorLine())
+      }
+      controller.close()
     },
   })
 
-  const sources = Array.from(new Set(chunks.map((chunk) => chunk.source)))
-  return result.toDataStreamResponse({ headers: { 'X-Rob-Sources': JSON.stringify(sources) } })
+  return new Response(stream, { headers })
 }
