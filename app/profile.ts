@@ -90,9 +90,22 @@ export const PROJECTS: Project[] = [
 ]
 
 export const SKILLS: { group: string; items: string[] }[] = [
-  { group: 'Backend', items: ['Java', 'Spring Boot', 'Microservices', 'REST APIs', 'Spring Security', 'OAuth2 / JWT'] },
-  { group: 'Platform', items: ['Kafka', 'API Gateway', 'Docker', 'Kubernetes', 'AWS', 'Azure', 'Observability'] },
-  { group: 'AI and LLM', items: ['Claude API', 'Streaming', 'Tool use', 'RAG', 'Embeddings', 'Vector search', 'Evals'] },
+  {
+    group: 'Backend',
+    items: ['Java 17+', 'Spring Boot', 'Hibernate / JPA', 'Microservices', 'REST APIs', 'Spring Security', 'OAuth2 / JWT', 'Redis', 'Tomcat / JBoss'],
+  },
+  {
+    group: 'Platform',
+    items: ['Distributed systems', 'Kafka', 'API Gateway', 'Docker', 'Kubernetes', 'AWS', 'Azure', 'Pivotal Cloud Foundry', 'Observability'],
+  },
+  {
+    group: 'AI and LLM',
+    items: ['Python', 'PyTorch', 'TensorFlow', 'Fine-tuning', 'RAG', 'Embeddings', 'Vector databases', 'Model serving', 'Agents and tool calling', 'MLOps / LLMOps', 'Evals', 'AI governance and guardrails', 'Claude API'],
+  },
+  {
+    group: 'Ways of working',
+    items: ['Agile delivery', 'Technical design docs', 'Code review', 'Incident response and on-call', 'Performance tuning', 'Mentoring'],
+  },
   { group: 'Frontend', items: ['React', 'TypeScript', 'Next.js'] },
 ]
 
