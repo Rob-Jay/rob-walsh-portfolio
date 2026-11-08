@@ -80,7 +80,8 @@ export function retrieve(question: string, previousQuestion?: string): Chunk[] {
       if (!tf) continue
       const df = index.filter((other) => other.tokens.has(term)).length
       const idf = Math.log(1 + (index.length - df + 0.5) / (df + 0.5))
-      score += (idf * tf * 2.2) / (tf + 1.2 * (0.25 + (0.75 * chunk.length) / avgLength))
+      // b = 0.4 rather than the usual 0.75: notes are short, and a strong length penalty makes the shortest section win ties.
+      score += (idf * tf * 2.2) / (tf + 1.2 * (0.6 + (0.4 * chunk.length) / avgLength))
     }
     return { chunk, score }
   })
